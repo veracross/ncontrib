@@ -61,6 +61,7 @@
     <Compile Include="Extensions\XDocumentExtensions.cs" />
     <Compile Include="Extensions\XmlExtensions.cs" />
     <Compile Include="Json.cs" />
+    <Compile Include="ObjectDescriber.cs" />
     <Compile Include="SqlUri.cs" />
     <Compile Include="StringInjector.cs" />
     <Compile Include="IniConfigurationManager.cs" />

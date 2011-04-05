@@ -39,7 +39,7 @@ namespace NContrib.Extensions {
         /// Converts a value to the requested type.
         /// </summary>
         /// <example>
-        /// When <paramref name="value"/> is null: For value types: a new insance. Otherwise, null is returned.
+        /// When <paramref name="value"/> is null: For value types: a new intsance. Otherwise, null is returned.
         /// The original value is returned when it matches the destination type or the destination type is assignable from the value type. (value is T)
         /// When the <paramref name="value"/> type implements IConvertible, it is used to convert to <paramref name="type"/> if supported
         /// When a <see cref="TypeConverter"/> exists for <paramref name="type"/> that can convert from the type of <paramref name="value"/>, it is used.
@@ -143,31 +143,8 @@ namespace NContrib.Extensions {
             q.Action(x => x.LocalProperty.SetValue(o, x.DefaultValue, null));
         }
 
-        public static string Describe(this object o) {
-            if (o == null)
-                return "(null)";
-
-            var r = o.GetType()
-                .GetProperties()
-                .Where(p => p.GetIndexParameters().Length == 0)
-                .Select(p => new { p.Name, Value = p.GetValue(o, null) })
-                .ToDictionary(k => k.Name, v => {
-                    if (v.Value == null)
-                        return "(null)";
-
-                    if (v.Value.GetType().IsArray)
-                        return ((object[])v.Value).Describe();
-
-                    var describer = v.GetType().GetMethod("Describe");
-
-                    return describer != null
-                        ? describer.Invoke(v.Value, null) as string
-                        : v.Value.ToString();
-                });
-
-            var padLen = r.Keys.Select(k => k.ToString()).Max(x => x.Length);
-
-            return r.Select(x => x.Key.ToString().PadRight(padLen) + " => " + x.Value).Join("\n");
+        private static string Describe(this object obj) {
+            return ObjectDescriber.Describe(obj);
         }
 
         /// <summary>
