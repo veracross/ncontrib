@@ -7,6 +7,46 @@ namespace NContrib.Tests {
     public class StringExtensionsTests {
 
         [Test]
+        public void IsBlank_BlankText_Detected() {
+            string nullval = null;
+            const string empty = "";
+            const string whitespace = " \t\n";
+            const string space = " ";
+
+            Assert.IsTrue(nullval.IsBlank());
+            Assert.IsTrue(empty.IsBlank());
+            Assert.IsTrue(whitespace.IsBlank());
+            Assert.IsTrue(space.IsBlank());
+        }
+
+        [Test]
+        public void IsBlank_NonBlankText_Detected() {
+            Assert.IsFalse(" f".IsBlank());
+            Assert.IsFalse("f".IsBlank());
+            Assert.IsFalse("\ntext\n".IsBlank());
+        }
+
+        [Test]
+        public void IsNotBlank_BlankText_Detected() {
+            string nullval = null;
+            const string empty = "";
+            const string whitespace = " \t\n";
+            const string space = " ";
+
+            Assert.IsFalse(nullval.IsNotBlank());
+            Assert.IsFalse(empty.IsNotBlank());
+            Assert.IsFalse(whitespace.IsNotBlank());
+            Assert.IsFalse(space.IsNotBlank());
+        }
+
+        [Test]
+        public void IsNotBlank_NonBlankText_Detected() {
+            Assert.IsTrue(" f".IsNotBlank());
+            Assert.IsTrue("f".IsNotBlank());
+            Assert.IsTrue("\ntext\n".IsNotBlank());
+        }
+
+        [Test]
         public void FromIndexOf_ValidRegexPatterns_Pass() {
             Assert.AreEqual("Malmö", "S-21144 Malmö".FromIndexOf(@"\d+\s*"));
             Assert.AreEqual("01921", "Boxford, MA 01921".FromIndexOf(@",\s*\p{Lu}{2}\s*"));

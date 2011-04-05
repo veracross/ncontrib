@@ -1,17 +1,44 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 using System.Xml;
 
 namespace NContrib.Extensions {
 
     public static class XmlExtensions {
 
-        public static string GetNodeValue(this XmlNode node, string xpath, string fallback = null) {
-            var selectedNode = node.SelectSingleNode(xpath);
+        /// <summary>
+        /// Gets a string value from the given <paramref name="xpath"/>
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="xpath"></param>
+        /// <param name="fallback"></param>
+        /// <returns></returns>
+        public static string GetNodeValue(this XmlNode node, string xpath = null, string fallback = null) {
+            var selectedNode = xpath.IsBlank() ? node : node.SelectSingleNode(xpath);
             return selectedNode == null ? fallback : selectedNode.InnerText;
         }
 
-        public static bool HasNode(this XmlNode node, string xpath) {
-            return node.SelectSingleNode(xpath) != null;
+        /// <summary>
+        /// Gets a value from the given <paramref name="xpath"/> and converts it to type <typeparamref name="T"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="node"></param>
+        /// <param name="xpath"></param>
+        /// <param name="fallback"></param>
+        /// <param name="cultureInfo"></param>
+        /// <returns></returns>
+        public static T GetNodeValue<T>(this XmlNode node, string xpath = null, T fallback = default(T), CultureInfo cultureInfo = null) {
+            var value = node.GetNodeValue(xpath);
+            return value == null ? fallback : value.ConvertTo<T>(cultureInfo);
+        }
+
+        /// <summary>Indicates if any nodes match the given xpath</summary>
+        /// <param name="node"></param>
+        /// <param name="xpath"></param>
+        /// <returns></returns>
+        public static bool NodesExist(this XmlNode node, string xpath) {
+            var n = node.SelectNodes(xpath);
+            return n != null && n.Count > 0;
         }
 
         /// <summary>

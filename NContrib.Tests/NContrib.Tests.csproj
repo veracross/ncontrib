@@ -37,6 +37,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,18 +45,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DateTimeExtensionsTests.cs" />
     <Compile Include="IDataReaderExtensionsTests.cs" />
     <Compile Include="LuhnTests.cs" />
     <Compile Include="MimeHelperTests.cs" />
     <Compile Include="ObjectExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlCommandExtensionsTests.cs" />
+    <Compile Include="SqlUriTests.cs" />
     <Compile Include="StringExtensionsTests.cs" />
     <Compile Include="TestingObjects.cs" />
     <Compile Include="TypeConversionTests.cs" />
     <Compile Include="XmlExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="fodder\books.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="fodder\HyperbolicParaboloid.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

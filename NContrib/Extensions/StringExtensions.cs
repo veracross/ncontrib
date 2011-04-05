@@ -99,18 +99,31 @@ namespace NContrib.Extensions {
                 : string.Empty;
         }
 
+
+        /// <summary>Tests to find if the string is null or empty-string (zero-length)</summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static bool IsEmpty(this string input) {
             return String.IsNullOrEmpty(input);
         }
 
+        /// <summary>Tests to find if the string is neither null null nor empty-string (zero-length)</summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static bool IsNotEmpty(this string input) {
             return !input.IsEmpty();
         }
 
+        /// <summary>Tests to find if the string is null, empty (zero-length), or contains only whitespace</summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static bool IsBlank(this string input) {
             return String.IsNullOrEmpty(input) || input.ToCharArray().All(c => char.IsWhiteSpace(c));
         }
 
+        /// <summary>Tests to find if the string is not null, not empty (zero-length), and contains more than whitespace</summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static bool IsNotBlank(this string input) {
             return !input.IsBlank();
         }

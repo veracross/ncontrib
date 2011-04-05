@@ -46,13 +46,25 @@ namespace NContrib {
 
         public string SourceFilePath { get; protected set; }
 
+        /// <summary>
+        /// Creates a new manager using the <see cref="DefaultSourceFilePath"/> if populated, otherwise the calling assembly name + .ini
+        /// </summary>
         public IniConfigurationManager() {
             SourceFilePath = DefaultSourceFilePath ?? Path.GetFullPath(System.Reflection.Assembly.GetCallingAssembly().GetName().Name + ".ini");
             BufferSize = DefaultBufferSize;
         }
 
+        /// <summary>
+        /// Creates a new manager using the specified ini file path
+        /// </summary>
+        /// <param name="path"></param>
         public IniConfigurationManager(string path) : this(path, DefaultBufferSize) { }
 
+        /// <summary>
+        /// Creates a new manager using the specified ini path and the given buffer size.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="bufferSize"></param>
         public IniConfigurationManager(string path, int bufferSize) {
             SourceFilePath = Path.GetFullPath(path);
             BufferSize = bufferSize;
@@ -78,6 +90,15 @@ namespace NContrib {
             return ReadValue<T>(section, key, defaultValue, BufferSize);
         }
 
+        /// <summary>
+        /// Reads a value if available. If not available, the <paramref name="defaultValue"/> is returned. Type converted to <typeparamref name="T"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="section"></param>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <param name="bufferSize"></param>
+        /// <returns></returns>
         public T ReadValue<T>(string section, string key, string defaultValue, int bufferSize) {
             if (!File.Exists(SourceFilePath))
                 throw new FileNotFoundException("Could not find INI file '" + SourceFilePath + "'", SourceFilePath);

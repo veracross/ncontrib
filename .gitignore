@@ -1,0 +1,9 @@
+
+/NContrib/obj
+/NContrib/bin
+/NContrib.Tests/obj
+/NContrib.Tests/bin
+/NContrib4/bin
+/NContrib4/obj
+/_ReSharper.NContrib
+*.suo

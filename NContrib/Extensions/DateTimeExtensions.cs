@@ -58,8 +58,16 @@ namespace NContrib.Extensions {
         /// <summary>Converts the given DateTime to a UNIX timestamp</summary>
         /// <param name="dt"></param>
         /// <returns></returns>
-        public static long ToUnixTimestamp(this DateTime dt) {
+        public static long ToUnixTime(this DateTime dt) {
             return (long)(dt - UnixEpoch).TotalSeconds;
+        }
+
+        /// <summary>Converts a timestamp to Swatch Internet Time (beat time)</summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public static double ToBeatTime(this DateTime dt) {
+            const double beatSize = 86.4f;
+            return (dt - dt.Date).TotalSeconds / beatSize;
         }
     }
 }
