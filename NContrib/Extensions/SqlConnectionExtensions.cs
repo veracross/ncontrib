@@ -1,0 +1,58 @@
+﻿using System.Data;
+using System.Data.SqlClient;
+
+namespace NContrib.Extensions {
+
+    public static class SqlConnectionExtensions {
+
+        /// <summary>
+        /// Creates a <see cref="SqlCommand"/> using the given connection
+        /// </summary>
+        /// <param name="cn"></param>
+        /// <param name="command"></param>
+        /// <param name="commandType">Defaults to <see cref="CommandType.Text"/></param>
+        /// <returns></returns>
+        public static SqlCommand CreateCommand(this SqlConnection cn, string command, CommandType commandType = CommandType.Text) {
+            return new SqlCommand(command, cn) { CommandType = commandType };
+        }
+
+        /// <summary>
+        /// Executes a Text non-query (update, delete, etc) against the given connection and returns nothing.
+        /// </summary>
+        /// <param name="cn"></param>
+        /// <param name="command"></param>
+        public static void ExecuteNonQuery(this SqlConnection cn, string command) {
+            cn.CreateCommand(command).ExecuteNonQuery();
+        }
+
+        public static SqlDataReader ExecuteProcedureReader(this SqlConnection cn, string procedureName, object parameters = null) {
+            return cn.ExecuteReader(procedureName, CommandType.StoredProcedure, parameters);
+        }
+
+        public static SqlDataReader ExecuteQueryReader(this SqlConnection cn, string query, object parameters = null) {
+            return cn.ExecuteReader(query, CommandType.StoredProcedure, parameters);
+        }
+
+        public static SqlDataReader ExecuteReader(this SqlConnection cn, string command, CommandType commandType, object parameters) {
+            using (var cmd = cn.CreateCommand(command, commandType)) {
+                cmd.AddParameters(parameters);
+                return cmd.ExecuteReader();
+            }
+        }
+
+        public static T ExecuteScalar<T>(this SqlConnection cn, string commandText, CommandType commandType = CommandType.Text) {
+            using (var cmd = cn.CreateCommand(commandText, commandType)) {
+                var value = cmd.ExecuteScalar();
+
+                if (typeof(T) == typeof(bool)) {
+                    var s = value as string;
+
+                    if (s == "0") value = "False";
+                    if (s == "1") value = "True";
+                }
+
+                return value.ConvertTo<T>();
+            }
+        }
+    }
+}
