@@ -143,8 +143,14 @@ namespace NContrib.Extensions {
             q.Action(x => x.LocalProperty.SetValue(o, x.DefaultValue, null));
         }
 
-        private static string Describe(this object obj) {
-            return ObjectDescriber.Describe(obj);
+        /// <summary>
+        /// Describes the state of an object in plain text
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string Describe(this object obj) {
+            var od = new ObjectDescriber();
+            return od.Describe(obj);
         }
 
         /// <summary>

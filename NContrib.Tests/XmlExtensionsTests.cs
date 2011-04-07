@@ -24,6 +24,11 @@ namespace NContrib.Tests {
         }
 
         [Test]
+        public void GetAttributeValue_Exiss_ReturnsTextValue() {
+            Assert.AreEqual("bk101", _books.SelectSingleNode("/catalog/book[@id='bk101']").GetAttributeValue("id"));
+        }
+
+        [Test]
         public void GetNodeValue_Xpath_ReturnsValue() {
             Assert.AreEqual("Computer", _books.GetNodeValue("/catalog/book[@id='bk101']/genre", "fallback"));
             Assert.AreEqual(new DateTime(2000, 10, 01), _books.GetNodeValue<DateTime>("/catalog/book[@id='bk101']/publish_date"));

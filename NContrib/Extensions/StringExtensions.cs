@@ -20,6 +20,14 @@ namespace NContrib.Extensions {
             return char.ToLower(s[0]) + Regex.Replace(s.Substring(1), @"[\s\-_](\w)", m => m.Groups[1].Value.ToUpper());
         }
 
+        /// <summary>Indicates that this string contains only the given characters and nothing else</summary>
+        /// <param name="input"></param>
+        /// <param name="chars"></param>
+        /// <returns></returns>
+        public static bool ContainsOnly(this string input, params char[] chars) {
+            return input.ToCharArray().All(c => chars.Contains(c));
+        }
+
         /// <summary>Gets a digit inside of the string at a specified index.</summary>
         /// <example>Given the string 122240861, the routing number for Schwab, "122240861".DigitAt(6) returns 8</example>
         /// <param name="input"></param>
@@ -62,6 +70,27 @@ namespace NContrib.Extensions {
             var index = s.IndexOf(search);
             var offset = index + (includeSearchChar ? 0 : 1);
             return index == -1 ? s : s.Substring(offset, s.Length - offset);
+        }
+
+        /// <summary>Indicates if every character in this string is a digit using <see cref="Char.IsDigit(char)"/></summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static bool IsDigits(this string input) {
+            return input.ToCharArray().All(Char.IsDigit);
+        }
+
+        /// <summary>Indicates if every character in this string is a letter using <see cref="Char.IsLetter(char)"/></summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static bool IsLetters(this string input) {
+            return input.ToCharArray().All(Char.IsLetter);
+        }
+
+        /// <summary>Indicates if every character in this string is a letter or a digit using <see cref="Char.IsLetterOrDigit(char)"/> </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static bool IsLettersOrDigits(this string input) {
+            return input.ToCharArray().All(Char.IsLetterOrDigit);
         }
 
         /// <summary>Concatenate these strings using the specified delimiter/glue/separator</summary>

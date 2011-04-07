@@ -7,6 +7,12 @@ namespace NContrib.Tests {
     public class StringExtensionsTests {
 
         [Test]
+        public void ContainsOnly_StringWithOnlyGivenCharacters_True() {
+            Assert.IsTrue("4111-1111-1111-1111".ContainsOnly('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-'));
+            Assert.IsTrue("XL".ContainsOnly('S', 'M', 'L', 'X'));
+        }
+
+        [Test]
         public void IsBlank_BlankText_Detected() {
             string nullval = null;
             const string empty = "";

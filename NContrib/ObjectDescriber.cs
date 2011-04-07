@@ -5,88 +5,94 @@ using NContrib.Extensions;
 
 namespace NContrib {
 
+    /// <summary>
+    /// TODO: Build a nested list of keys and values instead of returning strings when it suits us, then format it
+    /// TODO: Setup a clean system for resolving custom Describe methods, such as for arrays, dictionaries, and anything else
+    /// </summary>
     public class ObjectDescriber {
 
-        private readonly object _targetObject;
+        private int _previousNestLevel;
 
-        private readonly HashSet<int> _describedObjects;
+        private HashSet<string> _describedObjects;
 
-        private readonly int _nestLevel;
+        public int NestLimit { get; set; }
 
-        private int _nestLimit;
+        public int IndentationSize { get; set; }
 
-        public static int DefaultNestLimit = 8;
+        public static object Defaults = new {NestLimit = 4, IndentationSize = 2, Redescribe = false};
 
-        public static int NestIndentationSize = 2;
+        /// <summary>
+        /// When true, previously described objects will be described again.
+        /// When false, the object id will be printed instead
+        /// </summary>
+        public bool Redescribe { get; set; }
 
-        public int NestLimit {
-            get { return _nestLimit <= 0 ? DefaultNestLimit : _nestLimit; }
-            set { _nestLimit = value; }
+        public ObjectDescriber() {
+            this.SetDefaults(Defaults);
         }
 
-        public ObjectDescriber(object obj, HashSet<int> describedObjects = null, int nestLevel = 0) {
-            _targetObject = obj;
-            _describedObjects = describedObjects ?? new HashSet<int>();
-            _nestLevel = nestLevel;
+        public string Describe(object obj) {
+            _previousNestLevel = 0;
+            _describedObjects = new HashSet<string>();
+            return Describe(obj, 0);
         }
 
-        public static string Describe(object obj) {
-            return Describe(obj, null, 0);
-        }
+        private string Describe(object obj, int nestLevel) {
 
-        private static string Describe(object obj, HashSet<int> describedObjects = null, int nestLevel = 0) {
-            var od = new ObjectDescriber(obj, describedObjects, nestLevel);
-            return od.Describe();
-        }
+            if (Redescribe && nestLevel < _previousNestLevel)
+                _describedObjects = new HashSet<string>();
 
-        public string Describe() {
+            if (_describedObjects == null)
+                _describedObjects = new HashSet<string>();
 
-            if (_targetObject == null)
+            // record what nest level we're at so we can detect when we've started moving back UP the chain
+            // this is needed so we can optionally re-print previously seen objects
+            _previousNestLevel = nestLevel;
+
+            if (obj == null)
                 return "(null)";
 
-            var type = _targetObject.GetType();
+            var type = obj.GetType();
+            var objectId = type.Name + " <0x" + obj.GetHashCode().ToString("X") + ">";
 
-            var desc = type.Name + " <0x" + _targetObject.GetHashCode().ToString("X") + ">";
-
-            if (_describedObjects.Contains(_targetObject.GetHashCode()))
-                return desc;
-
-            if (_nestLevel > NestLimit)
-                return "(nest level exceeded)";
+            if (_describedObjects.Contains(objectId))
+                return objectId;
 
             if (type == typeof(string))
-                return _targetObject.ToString();
+                return obj.ToString();
 
             if (type.IsValueType)
-                return _targetObject.ToString();
+                return obj.ToString();
 
             if (type.IsArray)
-                return Describe(((object[]) _targetObject));
-            
+                return Describe(((object[])obj));
+
             var describer = type.GetMethod("Describe");
 
             if (describer != null)
-                return describer.Invoke(_targetObject, null) as string;
+                return describer.Invoke(obj, null) as string;
 
-            // log that we've seen this object so we don't describe it again
-            _describedObjects.Add(_targetObject.GetHashCode());
+            _describedObjects.Add(objectId);
+
+            if (nestLevel > NestLimit)
+                return "(nest level exceeded)";
 
             var props = type
                 .GetProperties()
                 .Where(p => p.GetIndexParameters().Length == 0)
-                .Select(p => new { p.Name, Value = p.GetValue(_targetObject, null) })
-                .ToDictionary(p => p.Name, p => Describe(p.Value, _describedObjects, _nestLevel + 1));
+                .Select(p => new { p.Name, Value = p.GetValue(obj, null) })
+                .ToDictionary(p => p.Name, p => Describe(p.Value, nestLevel + 1));
 
             // figure out how much space the property names take up so we can pad them properly
             var padLen = props.Keys.Select(k => k.ToString()).Max(x => x.Length);
 
             // format as Property => Value
-            var formatted = props.Select(x => x.Key.ToString().PadRight(padLen) + " => " + x.Value);
+            var formatted = props.Select(x => x.Key.ToString().PadRight(padLen) + " => " + x.Value).ToArray();
 
             // indent nested object descriptions
-            var spacer = new String(' ', _nestLevel * NestIndentationSize);
+            var spacer = new String(' ', nestLevel * IndentationSize);
 
-            return desc + "\n" + (_nestLevel > 0 ? spacer : "") + formatted.Join("\n" + spacer);
+            return objectId + "\n" + (nestLevel > 0 ? spacer : "") + formatted.Join("\n" + spacer);
         }
 
         public static string Describe<T>(T[] source) {

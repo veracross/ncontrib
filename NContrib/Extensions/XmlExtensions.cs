@@ -6,16 +6,36 @@ namespace NContrib.Extensions {
 
     public static class XmlExtensions {
 
+        public static string GetAttributeValue(this XmlNode node, string attributeName) {
+            return node.GetAttributeValue(attributeName, (string)null);
+        }
+
+        public static T GetAttributeValue<T>(this XmlNode node, string attributeName, T fallback = default(T), CultureInfo cultureInfo = null) {
+
+            if (node == null) return fallback;
+            if (node.Attributes == null) return fallback;
+            if (node.Attributes.Count == 0) return fallback;
+
+            var attr = node.Attributes[attributeName];
+
+            if (attr == null) return fallback;
+
+            var value = attr.InnerText;
+
+            if (value.IsBlank()) return fallback;
+            
+            return value.ConvertTo<T>(cultureInfo);
+        }
+
         /// <summary>
         /// Gets a string value from the given <paramref name="xpath"/>
         /// </summary>
         /// <param name="node"></param>
         /// <param name="xpath"></param>
-        /// <param name="fallback"></param>
+        /// <param name="namespaceManager"></param>
         /// <returns></returns>
-        public static string GetNodeValue(this XmlNode node, string xpath = null, string fallback = null) {
-            var selectedNode = xpath.IsBlank() ? node : node.SelectSingleNode(xpath);
-            return selectedNode == null ? fallback : selectedNode.InnerText;
+        public static string GetNodeValue(this XmlNode node, string xpath = null, XmlNamespaceManager namespaceManager = null) {
+            return node.GetNodeValue(xpath, (string)null, namespaceManager: namespaceManager);
         }
 
         /// <summary>
@@ -26,19 +46,27 @@ namespace NContrib.Extensions {
         /// <param name="xpath"></param>
         /// <param name="fallback"></param>
         /// <param name="cultureInfo"></param>
+        /// <param name="namespaceManager"></param>
         /// <returns></returns>
-        public static T GetNodeValue<T>(this XmlNode node, string xpath = null, T fallback = default(T), CultureInfo cultureInfo = null) {
-            var value = node.GetNodeValue(xpath);
-            return value == null ? fallback : value.ConvertTo<T>(cultureInfo);
+        public static T GetNodeValue<T>(this XmlNode node, string xpath = null, T fallback = default(T), CultureInfo cultureInfo = null, XmlNamespaceManager namespaceManager = null) {
+            var selectedNode = xpath.IsBlank() ? node : node.SelectSingleNode(xpath, namespaceManager);
+            if (selectedNode == null) return fallback;
+
+            var value = selectedNode.InnerText;
+            
+            return value.IsBlank() ? fallback : value.ConvertTo<T>(cultureInfo);
         }
 
         /// <summary>Indicates if any nodes match the given xpath</summary>
         /// <param name="node"></param>
         /// <param name="xpath"></param>
+        /// <param name="namespaceManager"></param>
         /// <returns></returns>
-        public static bool NodesExist(this XmlNode node, string xpath) {
-            var n = node.SelectNodes(xpath);
-            return n != null && n.Count > 0;
+        public static bool NodesExist(this XmlNode node, string xpath, XmlNamespaceManager namespaceManager = null) {
+            if (node.SelectSingleNode(xpath, namespaceManager) == null) return false;
+
+            var nodes = node.SelectNodes(xpath, namespaceManager);
+            return nodes != null && nodes.Count >= 0;
         }
 
         /// <summary>
