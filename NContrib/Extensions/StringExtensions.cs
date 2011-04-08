@@ -36,8 +36,11 @@ namespace NContrib.Extensions {
         /// <exception cref="ArgumentException">Thrown when the char is not a digit</exception>
         /// <exception cref="IndexOutOfRangeException" />
         public static int DigitAt(this string input, int index) {
-            ushort c = input[index];
+            if (input.IsBlank())
+                throw new ArgumentNullException(input);
 
+            ushort c = input[index];
+            
             if (c < '0' || c > '9')
                 throw new ArgumentException(string.Format("The value at index {0} is '{1}' which is not a digit.", index, input[index]));
 

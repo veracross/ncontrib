@@ -45,12 +45,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CurrencyTests.cs" />
     <Compile Include="DateTimeExtensionsTests.cs" />
     <Compile Include="IDataReaderExtensionsTests.cs" />
     <Compile Include="LuhnTests.cs" />
     <Compile Include="MimeHelperTests.cs" />
     <Compile Include="ObjectExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RangeTests.cs" />
     <Compile Include="SqlCommandExtensionsTests.cs" />
     <Compile Include="SqlUriTests.cs" />
     <Compile Include="StringExtensionsTests.cs" />
@@ -71,6 +73,10 @@
     <Content Include="lib\nunit.framework.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NContrib.International\NContrib.International.csproj">
+      <Project>{9C062AEC-B6F7-4612-BF5B-13EC4C3D266F}</Project>
+      <Name>NContrib.International</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NContrib\NContrib.csproj">
       <Project>{0814E816-B49E-416B-83D6-232E1DD8DD37}</Project>
       <Name>NContrib</Name>

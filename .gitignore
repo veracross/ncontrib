@@ -7,3 +7,5 @@
 /NContrib4/obj
 /_ReSharper.NContrib
 *.suo
+/NContrib.International/obj
+/NContrib.International/bin
