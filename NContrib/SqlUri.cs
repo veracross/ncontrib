@@ -7,7 +7,6 @@ namespace NContrib {
 
     public static class SqlUri {
 
-        
         /// <summary>
         /// Parses a SQL Server connection URI in the format
         /// mssql://username:password@server\instance/database
@@ -59,6 +58,13 @@ namespace NContrib {
             }
             
             return csb.ConnectionString;
+        }
+
+        public static SqlConnection OpenConnection(string sqlUri) {
+            var connectionString = ParseSqlServerUri(sqlUri);
+            var cn = new SqlConnection(connectionString);
+            cn.Open();
+            return cn;
         }
     }
 }

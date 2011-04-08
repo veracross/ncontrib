@@ -42,7 +42,9 @@
   <ItemGroup>
     <Compile Include="Currency.cs" />
     <Compile Include="CurrencyCollection.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="NationalId\Denmark.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

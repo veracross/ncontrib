@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
@@ -78,6 +79,24 @@ namespace NContrib.Extensions {
         /// <returns></returns>
         public static T GetValue<T>(this IDataReader dr, int columnIndex, T fallback) {
             return dr.IsDBNull(columnIndex) ? fallback : dr.GetValue(columnIndex).ConvertTo<T>();
+        }
+
+
+        /// <summary>
+        /// Reads through an <see cref="IDataReader"/> result set and transforms each row using
+        /// the given <paramref name="converter"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dr"></param>
+        /// <param name="converter"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> Transform<T>(this IDataReader dr, Converter<IDataReader, T> converter) {
+            var temp = new List<T>();
+
+            while (dr.Read())
+                temp.Add(converter(dr));
+
+            return temp;
         }
     }
 }

@@ -59,13 +59,9 @@ namespace NContrib.Extensions {
         /// <param name="converter"></param>
         /// <returns></returns>
         public static IEnumerable<T> ExecuteAndTransform<T>(this IDbCommand cmd, Converter<IDataReader, T> converter) {
-            var temp = new List<T>();
-
             using (var dr = cmd.ExecuteReader()) {
-                while (dr.Read())
-                    temp.Add(converter(dr));
+                return dr.Transform(converter);
             }
-            return temp;
         }
 
     }
