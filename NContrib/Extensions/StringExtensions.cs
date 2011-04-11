@@ -7,17 +7,27 @@ using System.Text.RegularExpressions;
 namespace NContrib.Extensions {
 
     public static class StringExtensions {
-
         /// <summary>
         /// Converts a string to camel case using spaces, dashes, and underscores as breaking points for a new capital letter
         /// </summary>
         /// <param name="s"></param>
+        /// <param name="firstCharTransform"></param>
         /// <returns></returns>
-        public static string Camelize(this string s) {
-            if (Regex.IsMatch(s, @"^\p{Lu}+$"))
-                return s.ToLower();
+        public static string CamelCase(this string s, TextTransform firstCharTransform = TextTransform.Lower) {
 
-            return char.ToLower(s[0]) + Regex.Replace(s.Substring(1), @"[\s\-_](\w)", m => m.Groups[1].Value.ToUpper());
+            // lower-case repeating upper-case letters (title-case, since we're leaving the first capital in-tact)
+            s = Regex.Replace(s, @"(?<=\p{Lu})(\p{Lu}+)", m => m.Groups[1].Value.ToLower());
+
+            // replace whitespace, dashes, an underscores with nothing and uppercase the letter after it
+            s = Regex.Replace(s, @"[\s\-_]+(\w)(\p{Lu}+)?", m => m.Groups[1].Value.ToUpper());
+
+            if (firstCharTransform == TextTransform.Upper)
+                return Char.ToUpper(s[0]) + s.Substring(1);
+
+            if (firstCharTransform == TextTransform.Lower)
+                return Char.ToLower(s[0]) + s.Substring(1);
+            
+            return s;
         }
 
         /// <summary>Indicates that this string contains only the given characters and nothing else</summary>
@@ -131,6 +141,52 @@ namespace NContrib.Extensions {
                 : string.Empty;
         }
 
+        /// <summary>
+        /// Finds all occurrences of the search string and return an array of indexes using current culture case sensitive searching
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        public static int[] IndexesOf(this string s, string search) {
+            return s.IndexesOf(search, StringComparison.CurrentCulture);
+        }
+
+        /// <summary>Finds all occurrences of the search string and return an array of indexes</summary>
+        /// <param name="s"></param>
+        /// <param name="search"></param>
+        /// <param name="stringComparison">String comparison to use</param>
+        /// <returns></returns>
+        public static int[] IndexesOf(this string s, string search, StringComparison stringComparison) {
+            var index = 0;
+            var result = new List<int>();
+
+            while (index < s.Length) {
+                index = s.IndexOf(search, index, stringComparison);
+                if (index == -1) break;
+                result.Add(index);
+                index++;
+            }
+
+            return result.ToArray();
+        }
+
+        /// <summary>Finds all occurrences of the search char and return an array of indexes</summary>
+        /// <param name="s"></param>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        public static int[] IndexesOf(this string s, char search) {
+            var index = 0;
+            var result = new List<int>();
+
+            while (index < s.Length) {
+                index = s.IndexOf(search, index + 1);
+                if (index == -1) break;
+                result.Add(index);
+                index++;
+            }
+
+            return result.ToArray();
+        }
 
         /// <summary>Tests to find if the string is null or empty-string (zero-length)</summary>
         /// <param name="input"></param>
@@ -252,6 +308,15 @@ namespace NContrib.Extensions {
         }
 
         /// <summary>
+        /// Returns a string as its <see cref="Encoding.UTF8"/> byte representation, hex encoded
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string ToHex(this string s) {
+            return s.ToHex(Encoding.Unicode);
+        }
+
+        /// <summary>
         /// Returns a string as its byte representation, hex encoded
         /// </summary>
         /// <param name="s"></param>
@@ -259,15 +324,6 @@ namespace NContrib.Extensions {
         /// <returns></returns>
         public static string ToHex(this string s, Encoding enc) {
             return enc.GetBytes(s).ToHex();
-        }
-
-        /// <summary>
-        /// Returns a string as its <see cref="Encoding.UTF8"/> byte representation, hex encoded
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static string ToHex(this string s) {
-            return s.ToHex(Encoding.UTF8);
         }
 
         /// <summary>
@@ -349,7 +405,7 @@ namespace NContrib.Extensions {
         /// <param name="s"></param>
         /// <returns></returns>
         public static string[] Words(this string s) {
-            return Regex.Split(s, @"(?s)\W+");
+            return Regex.Split(s, @"(?s)\W+").Where(m => m.IsNotBlank()).ToArray();
         }
 
         /// <summary>Returns an array of whitespace-separated elements in the given string. Similar to qw() in Perl</summary>
@@ -357,6 +413,74 @@ namespace NContrib.Extensions {
         /// <returns></returns>
         public static string[] W(this string s) {
             return Regex.Split(s, @"(?s)\s+");
+        }
+
+        /// <summary>
+        /// Performs text wrapping on a string
+        /// </summary>
+        /// <param name="s">String to wrap</param>
+        /// <param name="maxLineWidth">Maximum size of the lines</param>
+        /// <param name="method">Word-breaking method</param>
+        /// <param name="breaker">String used to create breaks. Environment.NewLine is a good choice.</param>
+        /// <param name="hardBreaker">String used during hard breaks, such as a dash or Environment.NewLine</param>
+        /// <returns></returns>
+        public static string Wrap(this string s, int maxLineWidth,
+            TextWrapMethod method = TextWrapMethod.HardBreakWhenNecessary,
+            string breaker = "\r\n",
+            string hardBreaker = "") {
+
+            if (maxLineWidth <= 0)
+                throw new ArgumentException("Max Width must be greater than zero", "maxLineWidth");
+
+            if (s.Length <= maxLineWidth)
+                return s;
+
+            var sb = new StringBuilder();
+            var stringPosition = 0;
+            var linePosition = 0;
+            char[] breakingChars = { ' ', '-', '\n', '\r' };
+
+            while (stringPosition <= s.Length) {
+                var nextBreakingPoint = s.IndexOfAny(breakingChars, stringPosition);
+
+                if (nextBreakingPoint <= 0) {
+                    var remaining = s.Length - stringPosition;
+
+                    if (remaining > maxLineWidth) {
+                        nextBreakingPoint = stringPosition + maxLineWidth;
+                    }
+                    else {
+                        sb.Append(s.Substring(stringPosition));
+                        break;
+                    }
+                }
+
+                var wordSize = nextBreakingPoint - stringPosition + 1;
+
+                linePosition += wordSize;
+
+                if (linePosition >= maxLineWidth) {
+
+                    if (method == TextWrapMethod.HardBreakAlways || wordSize > maxLineWidth) {
+                        var segmentSize = maxLineWidth - (linePosition - wordSize) - hardBreaker.Length;
+
+                        if (segmentSize > 0) {
+                            sb.Append(s.Substring(stringPosition, segmentSize) + hardBreaker);
+                            stringPosition += segmentSize;
+                        }
+                    }
+
+                    sb.Append(breaker);
+                    linePosition = 0;
+                }
+                else {
+                    sb.Append(s.Substring(stringPosition, wordSize));
+                    stringPosition += wordSize;
+                }
+
+            }
+
+            return sb.ToString();
         }
     }
 }

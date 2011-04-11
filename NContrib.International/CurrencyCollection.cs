@@ -1,10 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Linq;
 using NContrib.Extensions;
 
 namespace NContrib.International {
 
-    public class CurrencyCollection : Collection<Currency> {
+    public class CurrencyCollection : HashSet<Currency> {
 
         /// <summary>Get a currency by its numeric or alpha code</summary>
         /// <param name="id"></param>
@@ -16,8 +16,8 @@ namespace NContrib.International {
 
 
                 var currency = id.IsDigits()
-                           ? Items.SingleOrDefault(c => c.NumericCode == id)
-                           : Items.SingleOrDefault(s => s.Code == id);
+                           ? this.SingleOrDefault(c => c.NumericCode == id)
+                           : this.SingleOrDefault(s => s.Code == id);
 
                 if (currency == null)
                     throw new UnknownCurrencyIdentifierException(id);

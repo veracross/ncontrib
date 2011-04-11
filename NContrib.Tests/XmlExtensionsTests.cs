@@ -47,7 +47,7 @@ namespace NContrib.Tests {
             Assert.IsTrue(_books.NodesExist("/catalog/book[@id]"));
             Assert.IsTrue(_books.NodesExist("/catalog/book[@id='bk101']"));
             Assert.IsTrue(_books.NodesExist("/catalog/book[@id='bk101']/genre"));
-            Assert.IsFalse(_books.NodesExist("/catalog/" + Guid.NewGuid()));
+            Assert.IsFalse(_books.NodesExist("/catalog/node" + Guid.NewGuid().ToString("N").Right(8)));
         }
     }
 }

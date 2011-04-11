@@ -5,7 +5,7 @@ using NContrib.Extensions;
 
 namespace NContrib.International.NationalId {
 
-    public sealed class Denmark {
+    public sealed class Danish {
 
         private const string DateFormat = "ddMMyy";
 
@@ -17,16 +17,16 @@ namespace NContrib.International.NationalId {
 
         public DateTime DateOfBirth { get; private set; }
 
-        private Denmark() { }
+        private Danish() { }
 
-        public static Denmark Parse(string cprNumber) {
+        public static Danish Parse(string cprNumber) {
             if (!IsValidFormat(cprNumber))
                 throw new ArgumentException("Invalid CPR Number", "cprNumber");
 
-            return new Denmark {
-                DateOfBirth = ExtractDateComponent(cprNumber),
-                Gender = ExtractGenederComponent(cprNumber),
-                Sequence = ExtractSequenceComponent(cprNumber),
+            return new Danish {
+                DateOfBirth = GetDateOfBirth(cprNumber),
+                Gender = GetGender(cprNumber),
+                Sequence = GetSequence(cprNumber),
                 CprNumber = cprNumber,
             };
         }
@@ -40,7 +40,7 @@ namespace NContrib.International.NationalId {
 
             // ensure the date is a valid date
             try {
-                ExtractDateComponent(cprNumber);
+                GetDateOfBirth(cprNumber);
             }
             catch (FormatException) {
                 return false;
@@ -49,15 +49,15 @@ namespace NContrib.International.NationalId {
             return true;
         }
 
-        private static DateTime ExtractDateComponent(string cprNumber) {
+        public static DateTime GetDateOfBirth(string cprNumber) {
             return DateTime.ParseExact(cprNumber.Left(6), DateFormat, CultureInfo.InvariantCulture);
         }
 
-        private static string ExtractSequenceComponent(string cprNumber) {
+        public static string GetSequence(string cprNumber) {
             return cprNumber.Right(4);
         }
 
-        private static Gender ExtractGenederComponent(string cprNumber) {
+        public static Gender GetGender(string cprNumber) {
             return cprNumber.Right(1).ConvertTo<int>() % 2 == 0 ? Gender.Female : Gender.Male;
         }
 
@@ -65,7 +65,7 @@ namespace NContrib.International.NationalId {
             return CprNumber;
         }
 
-        public static implicit operator Denmark(string cprNumber) {
+        public static implicit operator Danish(string cprNumber) {
             return Parse(cprNumber);
         }
     }

@@ -63,10 +63,11 @@ namespace NContrib.Extensions {
         /// <param name="namespaceManager"></param>
         /// <returns></returns>
         public static bool NodesExist(this XmlNode node, string xpath, XmlNamespaceManager namespaceManager = null) {
-            if (node.SelectSingleNode(xpath, namespaceManager) == null) return false;
+            if (node == null)
+                return false;
 
             var nodes = node.SelectNodes(xpath, namespaceManager);
-            return nodes != null && nodes.Count >= 0;
+            return nodes != null && nodes.Count > 0;
         }
 
         /// <summary>

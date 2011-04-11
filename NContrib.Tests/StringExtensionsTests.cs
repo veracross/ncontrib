@@ -7,6 +7,19 @@ namespace NContrib.Tests {
     public class StringExtensionsTests {
 
         [Test]
+        public void CamelCase_VariousText_CamelCaseAsExpected() {
+            var fodder = new[] { "background-repeat-x", "background color", "transaction ID", "transaction_id", "x-pos" };
+
+            var expectedLower = new[] {"backgroundRepeatX", "backgroundColor", "transactionId", "transactionId", "xPos"};
+            var expectedUpper = new[] {"BackgroundRepeatX", "BackgroundColor", "TransactionId", "TransactionId", "XPos"};
+
+            for (var i = 0; i < fodder.Length; i++) {
+                Assert.AreEqual(expectedLower[i], fodder[i].CamelCase(TextTransform.Lower), "Lower Test");
+                Assert.AreEqual(expectedUpper[i], fodder[i].CamelCase(TextTransform.Upper), "Upper Test");
+            }
+        }
+
+        [Test]
         public void ContainsOnly_StringWithOnlyGivenCharacters_True() {
             Assert.IsTrue("4111-1111-1111-1111".ContainsOnly('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-'));
             Assert.IsTrue("XL".ContainsOnly('S', 'M', 'L', 'X'));

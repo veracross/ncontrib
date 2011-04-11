@@ -45,9 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CurrencyTests.cs" />
+    <Compile Include="International\CountryTests.cs" />
+    <Compile Include="International\CurrencyTests.cs" />
     <Compile Include="DateTimeExtensionsTests.cs" />
     <Compile Include="IDataReaderExtensionsTests.cs" />
+    <Compile Include="International\NationalId\SwedishTests.cs" />
     <Compile Include="LuhnTests.cs" />
     <Compile Include="MimeHelperTests.cs" />
     <Compile Include="ObjectExtensionsTests.cs" />

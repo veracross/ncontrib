@@ -6,7 +6,7 @@ using NContrib.Extensions;
 using NContrib.International;
 using NUnit.Framework;
 
-namespace NContrib.Tests {
+namespace NContrib.Tests.International {
 
     [TestFixture]
     public class CurrencyTest {

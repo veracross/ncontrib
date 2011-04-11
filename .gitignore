@@ -9,3 +9,5 @@
 *.suo
 /NContrib.International/obj
 /NContrib.International/bin
+/NContrib.Examples/bin
+/NContrib.Examples/obj

@@ -25,20 +25,13 @@ namespace NContrib {
         public bool IsMaxInclusive { get; private set; }
 
         /// <summary>
-        /// Creates a Range that is both minimum and maximum inclusive
-        /// </summary>
-        /// <param name="min">Minimum inclusive value</param>
-        /// <param name="max">Maximum inclusive value</param>
-        public Range(T min, T max) : this(min, max, true, true) { }
-
-        /// <summary>
         /// Creates a Range which is optionally min and max inclusive
         /// </summary>
         /// <param name="min">Minimum value</param>
         /// <param name="max">Minimum value</param>
         /// <param name="minInclusive">Are values that match the Min are considered to be in the range?</param>
         /// <param name="maxInclusive">Are values that match the Max are considered to be in the range?</param>
-        public Range(T min, T max, bool minInclusive, bool maxInclusive)
+        public Range(T min, T max, bool minInclusive = true, bool maxInclusive = true)
             : this() {
             Min = min;
             Max = max;
