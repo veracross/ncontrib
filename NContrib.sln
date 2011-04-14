@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NContrib.International", "N
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NContrib.Examples", "NContrib.Examples\NContrib.Examples.csproj", "{9BFA014B-993B-4395-B7DC-75E8E9E0F775}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NContrib.Drawing", "NContrib.Drawing\NContrib.Drawing.csproj", "{0A962129-1F9E-447C-91D6-E5B5CC2E2077}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,16 @@ Global
 		{9BFA014B-993B-4395-B7DC-75E8E9E0F775}.Release|Mixed Platforms.Build.0 = Release|x86
 		{9BFA014B-993B-4395-B7DC-75E8E9E0F775}.Release|x86.ActiveCfg = Release|x86
 		{9BFA014B-993B-4395-B7DC-75E8E9E0F775}.Release|x86.Build.0 = Release|x86
+		{0A962129-1F9E-447C-91D6-E5B5CC2E2077}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A962129-1F9E-447C-91D6-E5B5CC2E2077}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A962129-1F9E-447C-91D6-E5B5CC2E2077}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0A962129-1F9E-447C-91D6-E5B5CC2E2077}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{0A962129-1F9E-447C-91D6-E5B5CC2E2077}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0A962129-1F9E-447C-91D6-E5B5CC2E2077}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A962129-1F9E-447C-91D6-E5B5CC2E2077}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A962129-1F9E-447C-91D6-E5B5CC2E2077}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0A962129-1F9E-447C-91D6-E5B5CC2E2077}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{0A962129-1F9E-447C-91D6-E5B5CC2E2077}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

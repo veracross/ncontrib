@@ -5,7 +5,7 @@ using NContrib.Extensions;
 
 namespace NContrib.International.NationalId {
 
-    public sealed class Danish {
+    public sealed class DanishCprNumber {
 
         private const string DateFormat = "ddMMyy";
 
@@ -17,13 +17,13 @@ namespace NContrib.International.NationalId {
 
         public DateTime DateOfBirth { get; private set; }
 
-        private Danish() { }
+        private DanishCprNumber() { }
 
-        public static Danish Parse(string cprNumber) {
+        public static DanishCprNumber Parse(string cprNumber) {
             if (!IsValidFormat(cprNumber))
                 throw new ArgumentException("Invalid CPR Number", "cprNumber");
 
-            return new Danish {
+            return new DanishCprNumber {
                 DateOfBirth = GetDateOfBirth(cprNumber),
                 Gender = GetGender(cprNumber),
                 Sequence = GetSequence(cprNumber),
@@ -35,7 +35,7 @@ namespace NContrib.International.NationalId {
 
             // basic pattern checking. not bullet-proof because of the date component
             // but a fair first-pass check
-            if (!Regex.IsMatch(cprNumber, @"^[0-3][0-9][0-1][0-9][0-9]{2}-[0-9]{4}$"))
+            if (!Regex.IsMatch(cprNumber, RegexLibrary.NationalId.DanishCprNumber))
                 return false;
 
             // ensure the date is a valid date
@@ -65,7 +65,7 @@ namespace NContrib.International.NationalId {
             return CprNumber;
         }
 
-        public static implicit operator Danish(string cprNumber) {
+        public static implicit operator DanishCprNumber(string cprNumber) {
             return Parse(cprNumber);
         }
     }

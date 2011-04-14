@@ -5,7 +5,7 @@ using NContrib.Extensions;
 
 namespace NContrib.International.NationalId {
 
-    public class Swedish {
+    public class SwedishPersonNumber {
 
         public DateTime DateOfBirth { get; private set; }
 
@@ -19,7 +19,7 @@ namespace NContrib.International.NationalId {
             get { return DateTime.UtcNow.ToTimeZone("Central European Standard Time"); }
         }
 
-        private Swedish() {}
+        private SwedishPersonNumber() {}
 
         private string Format(string dateFormat) {
             return DateOfBirth.ToString(dateFormat, CultureInfo.InvariantCulture) + CenturyIndicator(DateOfBirth) + Löpnummer + CheckDigit;
@@ -33,7 +33,7 @@ namespace NContrib.International.NationalId {
             return Format("yyMMdd");
         }
 
-        public static Swedish Parse(string personnummer) {
+        public static SwedishPersonNumber Parse(string personnummer) {
             
             if (!IsValidFormat(personnummer))
                 throw new ArgumentException("Invalid personnummer format", personnummer);
@@ -66,7 +66,7 @@ namespace NContrib.International.NationalId {
                 dob = new DateTime(personnummer.Substring(0, 4).ConvertTo<int>(), m, d);
             }
 
-            return new Swedish {
+            return new SwedishPersonNumber {
                 DateOfBirth = dob,
                 Löpnummer = personnummer.Substring(offset + 7, 3),
                 CheckDigit = personnummer.Substring(offset + 10, 1).ConvertTo<int>(),
@@ -96,10 +96,10 @@ namespace NContrib.International.NationalId {
         }
 
         public static bool IsValidFormat(string personnummer) {
-            return Regex.IsMatch(personnummer, @"(?:\d{2})?\d{2}[0-1][0-9][0-3]\d[\-\+]\d{4}");
+            return Regex.IsMatch(personnummer, RegexLibrary.NationalId.SwedishPersonNumber);
         }
 
-        public static implicit operator Swedish(string personnummer) {
+        public static implicit operator SwedishPersonNumber(string personnummer) {
             return Parse(personnummer);
         }
     }

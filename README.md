@@ -28,8 +28,9 @@ Structure
 The solution is broken up into several projects
 
 * NContrib - Targets .NET 3.5 and is the core projects
+* NContrib.Drawing - Targets .NET 3.5 and provides helpers and extensions related to System.Drawing functionality
+* NContrib.International - Targets .NET 3.5 and provides functionality for projects with multi-national reach
 * NContrib4 - Targets .NET 4 and contains code that can only run on .NET 4, such as dynamics
-* NContrib.International - Targets .NET 3.5 and provides functionality for projects with multi-national reach.
 
 And two projects for examples and unit testing
 
@@ -41,16 +42,12 @@ FAQ
 
 **Q. Why are you using Q&R brace-styles?**
 
-Because it is the superior
+Because it is the right way of doing it ;) But in all seriousness, if it becomes a problem for would-be developers I'd be willing to use the .NET default
 
 **Q. Can you add some functionality for me?**
 
 This is an open-source project so you could fork it and issue a pull request.
 But I understand not being comfortable with adding code. If you would like something added, sure, ask and we'll talk.
-
-**Q. Which Star Trek is best?**
-
-That's a tough one. It's not TNG or TOS though.
 
 Examples
 --------
@@ -187,7 +184,7 @@ Examples
 
 **ToTimeZone**
 
-    DateTime.UtcNow
+    var date = DateTime.UtcNow
     => 2011-04-08 20:11:37
     
     date.ToTimeZone("Tokyo Standard Time")
@@ -275,7 +272,7 @@ Since there's an extension method for executing a stored procedure and returning
     r.Includes(5)
     => true
     
-    r.Indlues(20)
+    r.Includes(20)
     => true
     
     var r = new Range<int>(10, 20, minInclusive: true, maxInclusive: false)

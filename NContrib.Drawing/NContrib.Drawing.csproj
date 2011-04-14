@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{9C062AEC-B6F7-4612-BF5B-13EC4C3D266F}</ProjectGuid>
+    <ProjectGuid>{0A962129-1F9E-447C-91D6-E5B5CC2E2077}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NContrib.International</RootNamespace>
-    <AssemblyName>NContrib.International</AssemblyName>
+    <RootNamespace>NContrib.Drawing</RootNamespace>
+    <AssemblyName>NContrib.Drawing</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -34,21 +34,12 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Country.cs" />
-    <Compile Include="CountryCollection.cs" />
-    <Compile Include="Currency.cs" />
-    <Compile Include="CurrencyCollection.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="Exceptions.cs" />
-    <Compile Include="NationalId\DanishCprNumber.cs" />
-    <Compile Include="NationalId\SwedishPersonNumber.cs" />
+    <Compile Include="ImageSizeHelper.cs" />
+    <Compile Include="ImageTypeHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

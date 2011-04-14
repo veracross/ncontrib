@@ -47,6 +47,7 @@
     <Compile Include="Endian.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\ArrayExtensions.cs" />
+    <Compile Include="Extensions\BinaryReaderExtensions.cs" />
     <Compile Include="Extensions\ByteExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\IDataReaderExtensions.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="LoremIpsum.cs" />
     <Compile Include="ObjectDescriber.cs" />
     <Compile Include="Range.cs" />
+    <Compile Include="RegexLibrary.cs" />
     <Compile Include="SqlUri.cs" />
     <Compile Include="StringInjector.cs" />
     <Compile Include="IniConfigurationManager.cs" />
