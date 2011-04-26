@@ -103,17 +103,6 @@ namespace NContrib.Extensions {
             if (type.IsEnum)
                 return Enum.Parse(type, value.ToString());
 
-            // some objects have a TryParse() and Parse() method. let's see how we do with those
-            /*
-            object temp;
-
-            if ((temp = TryParseConvert(value, type, cultureInfo)) != null)
-                return temp;
-
-            if ((temp = ParseConvert(value, type, cultureInfo)) != null)
-                return temp;
-            */
-
             throw new InvalidCastException(string.Format("It is not possible to convert from '{0}' to '{1}'",
                                                          value.GetType(), type));
         }
@@ -236,26 +225,5 @@ namespace NContrib.Extensions {
             o.SetDefaults();
             o.CopyPropertiesFrom(defaults);
         }
-
-        /* Until I figure out how to make cultureinfo actually work...these are offline
-        
-        public static object TryParseConvert(this object value, Type type, CultureInfo cultureInfo) {
-            const BindingFlags flags = BindingFlags.Public | BindingFlags.Static;
-            
-            var parser = type.GetMethod("TryParse", flags, null, new[] { value.GetType(), type.MakeByRefType() }, null);
-            if (parser == null) return null;
-
-            var args = new[] { value, type.IsValueType ? Activator.CreateInstance(type) : null };
-            var result = (bool)parser.Invoke(null, flags, null, args, cultureInfo);
-
-            return result ? args[1] : null;
-        }
-
-        public static object ParseConvert(this object value, Type type, CultureInfo cultureInfo) {
-            const BindingFlags flags = BindingFlags.Public | BindingFlags.Static;
-            var parser = type.GetMethod("Parse", flags, null, new[] { value.GetType() }, null);
-            return parser == null ? null : parser.Invoke(null, flags, null, new[] { value }, cultureInfo);
-        }
-        */
     }
 }

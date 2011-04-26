@@ -56,11 +56,6 @@ Examples
 
 ### String extensions
 
-**CamelCase**
-
-    "transaction-id".CamelCase()
-    => transactionId
-
 **ContainsOnly**
     
     "XL".ContainsOnly('S', 'M', 'L', 'X')
@@ -145,11 +140,49 @@ Examples
     "there".Right(2)
     => re
 
-**SnakeCase**
+**ToCamelCase**
+
+    "transaction-id".CamelCase()
+    => transactionId
+
+**ToPlural**
+
+    "cat".ToPlural()
+    => cats
+    
+    "cat".ToPlural(1)
+    => cat
+    
+    "moose".ToPlural()
+    => moose
+    
+    "leaf".ToPlural()
+    => leaves
+    
+**ToSingular**
+    
+    "knives".ToSinglar()
+    => knife
+    
+    "mice".ToSingular()
+    => mouse
+    
+**ToSnakeCase**
     
     "transactionId".SnakeCase()
     => transaction_id
 
+**ToTitleCase**
+    
+    "BANK OF AMERICA N.A.".ToTitleCase()
+    => Bank of America N.A.
+    
+    "JPMORGAN CHASE BANK USA".ToTitleCase(new [] { "JPMorgan", "USA" })
+    => JPMorgan Chase Bank USA
+    
+    "o'leary's pub".ToTitleCase()
+    => O'Leary's Pub
+    
 **UntilIndexOf**
     
     "Boston, MA".UntilIndexOf(",")
@@ -192,6 +225,12 @@ Examples
 
 ### Object extensions
 
+**CopyPropertiesFrom**
+    
+    var myPerson = new Person { FirstName = "Reginald", LastName = "Bäckström" }
+    myPerson.CopyPropertiesFrom(new { FirstName = "Mike", LastName = "Jönsson" })
+    => FirstName = "Mike", LastName = "Jönsson"
+
 **ConvertTo**
     
     "123.45".ConvertTo<decimal>(CultureInfo.InvariantCulture)
@@ -199,6 +238,9 @@ Examples
     
     "False".ConvertTo<bool>()
     => False
+    
+    "StoredProcedure".ConvertTo<CommandType>()
+    => CommandType.StoredProcedure
 
 **In**
 

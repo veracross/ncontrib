@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Globalization;
 using NContrib.Extensions;
 using NUnit.Framework;
@@ -7,6 +8,7 @@ namespace NContrib.Tests {
 
     [TestFixture]
     public class TypeConversionTests {
+
 
         [Test]
         public void ConvertTo_EuroDecimals_Converts() {
@@ -55,6 +57,7 @@ namespace NContrib.Tests {
         [Test]
         public void ConvertTo_EnumName_Converts() {
             Assert.AreEqual(Operators.Telenor, "Telenor".ConvertTo<Operators>());
+            Assert.AreEqual(CommandType.StoredProcedure, "StoredProcedure".ConvertTo<CommandType>());
         }
 
         /* Culture info isn't being used by reflection as expected
