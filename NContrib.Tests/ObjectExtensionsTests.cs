@@ -20,6 +20,9 @@ namespace NContrib.Tests {
                 Assert.AreEqual(true, i.In(col));
 
             Assert.AreEqual(true, 5.In(1, 3, 5, 6, 7), "Params");
+
+            //var list = new System.Collections.Generic.List<string> {"cat", "dog", "sink"};
+            //Assert.AreEqual(true, "dog".In(list)
         }
 
         [Test]

@@ -38,7 +38,7 @@ namespace NContrib.Tests {
             var parameters = new {Id = 1, Name = "Reginald", DateOfBirth = new DateTime(1985, 10, 08)};
 
             var cmd = new SqlCommand();
-            cmd.AddParameters(parameters, s => s.SnakeCase().ToLower());
+            cmd.AddParameters(parameters, s => s.ToSnakeCase().ToLower());
 
             var commandParameters = cmd.Parameters.Cast<SqlParameter>().ToDictionary(p => p.ParameterName, p => p.Value);
             var commandParameterKeys = commandParameters.Select(p => p.Key).ToArray();

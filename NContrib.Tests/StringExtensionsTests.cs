@@ -7,15 +7,15 @@ namespace NContrib.Tests {
     public class StringExtensionsTests {
 
         [Test]
-        public void CamelCase_VariousText_CamelCaseAsExpected() {
+        public void ToCamelCase_VariousText_CamelCaseAsExpected() {
             var fodder = new[] { "background-repeat-x", "background color", "transaction ID", "transaction_id", "x-pos" };
 
             var expectedLower = new[] {"backgroundRepeatX", "backgroundColor", "transactionId", "transactionId", "xPos"};
             var expectedUpper = new[] {"BackgroundRepeatX", "BackgroundColor", "TransactionId", "TransactionId", "XPos"};
 
             for (var i = 0; i < fodder.Length; i++) {
-                Assert.AreEqual(expectedLower[i], fodder[i].CamelCase(TextTransform.Lower), "Lower Test");
-                Assert.AreEqual(expectedUpper[i], fodder[i].CamelCase(TextTransform.Upper), "Upper Test");
+                Assert.AreEqual(expectedLower[i], fodder[i].ToCamelCase(TextTransform.Lower), "Lower Test");
+                Assert.AreEqual(expectedUpper[i], fodder[i].ToCamelCase(TextTransform.Upper), "Upper Test");
             }
         }
 
@@ -72,6 +72,39 @@ namespace NContrib.Tests {
         }
 
         [Test]
+        public void ToPlural_VariousTextNoNumber_Pluralizes() {
+            // normal
+            Assert.AreEqual("cars", "car".ToPlural());
+
+            // irregular
+            Assert.AreEqual("criteria", "criterion".ToPlural());
+
+            // irregular
+            Assert.AreEqual("leaves", "leaf".ToPlural());
+
+            // some -y words should end up as -ies
+            Assert.AreEqual("entities", "entity".ToPlural());
+
+            // makine sure -y isn't being blindly replaced with -ies
+            Assert.AreEqual("holidays", "holiday".ToPlural());
+
+            Assert.AreEqual("women", "woman".ToPlural());
+            Assert.AreEqual("wolves", "wolf".ToPlural());
+            Assert.AreEqual("loaves", "loaf".ToPlural());
+            Assert.AreEqual("knives", "knife".ToPlural());
+            Assert.AreEqual("roofs", "roof".ToPlural());
+            Assert.AreEqual("dwarfs", "dwarf".ToPlural());
+            Assert.AreEqual("cellos", "cello".ToPlural());
+            Assert.AreEqual("memos", "memo".ToPlural());
+            Assert.AreEqual("stereos", "stereo".ToPlural());
+            Assert.AreEqual("mice", "mouse".ToPlural());
+            Assert.AreEqual("cherries", "cherry".ToPlural());
+            Assert.AreEqual("days", "day".ToPlural());
+            Assert.AreEqual("pros", "pro".ToPlural());
+            Assert.AreEqual("staffs", "staff".ToPlural());
+        }
+
+        [Test]
         public void Right_String_ReturnsRightCharacters() {
             const string s = "No highs no lows must be Bose";
 
@@ -80,19 +113,37 @@ namespace NContrib.Tests {
         }
 
         [Test]
-        public void SnakeCase_CamelCaseText_Snakeifies() {
-            Assert.AreEqual("Transaction_ID", "TransactionID".SnakeCase());
-            Assert.AreEqual("First_Name", "FirstName".SnakeCase());
-            Assert.AreEqual("CPR_Number", "CPRNumber".SnakeCase());
-            Assert.AreEqual("Reference_ID_Number", "ReferenceIDNumber".SnakeCase());
-            Assert.AreEqual("Local_ATM_Transaction", "LocalATMTransaction".SnakeCase());
-            Assert.AreEqual("Person_SSN", "PersonSSN".SnakeCase());
-            Assert.AreEqual("Person_Ssn", "PersonSsn".SnakeCase());
-            Assert.AreEqual("BMWCCA_Member_ID", "BMWCCAMemberID".SnakeCase());
-            Assert.AreEqual("BMWCCA_Member_Id", "BMWCCAMemberId".SnakeCase());
-            Assert.AreEqual("ID_Number", "IDNumber".SnakeCase());
-            Assert.AreEqual("Id_Number", "IdNumber".SnakeCase());
-            Assert.AreEqual("ELeg_Id_Expiration", "ELegIdExpiration".SnakeCase());
+        public void ToSingular_VariousTextNoNumber_Singularizes() {
+            // irregular
+            Assert.AreEqual("goose", "geese".ToSingular());
+
+            // irregular
+            Assert.AreEqual("leaf", "leaves".ToSingular());
+
+            // normal
+            Assert.AreEqual("car", "cars".ToSingular());
+
+            // -ies to -y
+            Assert.AreEqual("quality", "qualities".ToSingular());
+
+            // -ys to -y
+            Assert.AreEqual("holiday", "holiday".ToSingular());
+        }
+
+        [Test]
+        public void ToSnakeCase_CamelCaseText_Snakeifies() {
+            Assert.AreEqual("Transaction_ID", "TransactionID".ToSnakeCase());
+            Assert.AreEqual("First_Name", "FirstName".ToSnakeCase());
+            Assert.AreEqual("CPR_Number", "CPRNumber".ToSnakeCase());
+            Assert.AreEqual("Reference_ID_Number", "ReferenceIDNumber".ToSnakeCase());
+            Assert.AreEqual("Local_ATM_Transaction", "LocalATMTransaction".ToSnakeCase());
+            Assert.AreEqual("Person_SSN", "PersonSSN".ToSnakeCase());
+            Assert.AreEqual("Person_Ssn", "PersonSsn".ToSnakeCase());
+            Assert.AreEqual("BMWCCA_Member_ID", "BMWCCAMemberID".ToSnakeCase());
+            Assert.AreEqual("BMWCCA_Member_Id", "BMWCCAMemberId".ToSnakeCase());
+            Assert.AreEqual("ID_Number", "IDNumber".ToSnakeCase());
+            Assert.AreEqual("Id_Number", "IdNumber".ToSnakeCase());
+            Assert.AreEqual("ELeg_Id_Expiration", "ELegIdExpiration".ToSnakeCase());
         }
 
         [Test]

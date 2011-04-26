@@ -34,12 +34,23 @@ namespace NContrib.Extensions {
             return dict.ContainsKey(key) ? dict[key] : fallback;
         }
 
+        /// <summary>
+        /// Creates an HTTP query string from a dictionary of key/value pairs using the default encoding, <see cref="Encoding.UTF8"/>
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <returns></returns>
         public static string ToHttpQuery(this IDictionary<string, string> dict) {
             return dict.ToHttpQuery(Encoding.UTF8);
         }
 
+        /// <summary>
+        /// Creates an HTTP query string from a dictionary of key/value pairs
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <param name="enc"></param>
+        /// <returns></returns>
         public static string ToHttpQuery(this IDictionary<string, string> dict, Encoding enc) {
-            return dict.Select(p => HttpUtility.UrlEncode(p.Key, enc) + "=" + HttpUtility.UrlEncode(p.Value, enc)).Join(", ");
+            return dict.Select(p => HttpUtility.UrlEncode(p.Key, enc) + "=" + HttpUtility.UrlEncode(p.Value, enc)).Join("&");
         }
 
         public static bool TryGetValue<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Action<TValue> assign) {

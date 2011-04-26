@@ -1,5 +1,8 @@
-﻿namespace NContrib.International {
+﻿using System;
 
+namespace NContrib.International {
+
+    [Serializable]
     public class Country {
 
         public static CountryCollection Countries = new CountryCollection {

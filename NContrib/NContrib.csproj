@@ -44,6 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Culture\EnglishTextCaseTransformer.cs" />
+    <Compile Include="Culture\EnglishInflector.cs" />
+    <Compile Include="Culture\IInflector.cs" />
+    <Compile Include="Culture\Inflectors.cs" />
+    <Compile Include="Culture\ITextCaseTransformer.cs" />
+    <Compile Include="Culture\TextCaseTrasnformers.cs" />
     <Compile Include="Endian.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\ArrayExtensions.cs" />

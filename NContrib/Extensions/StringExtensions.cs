@@ -1,34 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using NContrib.Culture;
 
 namespace NContrib.Extensions {
 
     public static class StringExtensions {
-        /// <summary>
-        /// Converts a string to camel case using spaces, dashes, and underscores as breaking points for a new capital letter
-        /// </summary>
-        /// <param name="s"></param>
-        /// <param name="firstCharTransform"></param>
-        /// <returns></returns>
-        public static string CamelCase(this string s, TextTransform firstCharTransform = TextTransform.Lower) {
-
-            // lower-case repeating upper-case letters (title-case, since we're leaving the first capital in-tact)
-            s = Regex.Replace(s, @"(?<=\p{Lu})(\p{Lu}+)", m => m.Groups[1].Value.ToLower());
-
-            // replace whitespace, dashes, an underscores with nothing and uppercase the letter after it
-            s = Regex.Replace(s, @"[\s\-_]+(\w)(\p{Lu}+)?", m => m.Groups[1].Value.ToUpper());
-
-            if (firstCharTransform == TextTransform.Upper)
-                return Char.ToUpper(s[0]) + s.Substring(1);
-
-            if (firstCharTransform == TextTransform.Lower)
-                return Char.ToLower(s[0]) + s.Substring(1);
-            
-            return s;
-        }
 
         /// <summary>Indicates that this string contains only the given characters and nothing else</summary>
         /// <param name="input"></param>
@@ -288,23 +268,26 @@ namespace NContrib.Extensions {
         }
 
         /// <summary>
-        /// Returns a string in snake case. Often used for converting object names.
-        /// Is smart about repeating capital letters
+        /// Converts a string to camel case using spaces, dashes, and underscores as breaking points for a new capital letter
         /// </summary>
-        /// <example>
-        /// TransactionID => Transaction_ID
-        /// FirstName => First_Name
-        /// CPRNumber => CPR_Number
-        /// ReferenceIDNumber => Reference_ID_Number
-        /// </example>
-        /// <param name="input"></param>
+        /// <param name="s"></param>
+        /// <param name="firstCharTransform"></param>
         /// <returns></returns>
-        public static string SnakeCase(this string input) {
-            input = input.Replace(' ', '_');
-            input = Regex.Replace(input, @"(?<=\p{Lu}{2,}|\p{Ll})(\p{Lu})(?=\p{Ll})", "_$1");
-            input = Regex.Replace(input, @"(?<=\p{Ll})(\p{Lu}{2,})", "_$1");
-            input = Regex.Replace(input, "_{2,}", "_");
-            return input;
+        public static string ToCamelCase(this string s, TextTransform firstCharTransform = TextTransform.Lower) {
+
+            // lower-case repeating upper-case letters (title-case, since we're leaving the first capital in-tact)
+            s = Regex.Replace(s, @"(?<=\p{Lu})(\p{Lu}+)", m => m.Groups[1].Value.ToLower());
+
+            // replace whitespace, dashes, an underscores with nothing and uppercase the letter after it
+            s = Regex.Replace(s, @"[\s\-_]+(\w)(\p{Lu}+)?", m => m.Groups[1].Value.ToUpper());
+
+            if (firstCharTransform == TextTransform.Upper)
+                return Char.ToUpper(s[0]) + s.Substring(1);
+
+            if (firstCharTransform == TextTransform.Lower)
+                return Char.ToLower(s[0]) + s.Substring(1);
+
+            return s;
         }
 
         /// <summary>
@@ -324,6 +307,88 @@ namespace NContrib.Extensions {
         /// <returns></returns>
         public static string ToHex(this string s, Encoding enc) {
             return enc.GetBytes(s).ToHex();
+        }
+
+        /// <summary>
+        /// Pluralizes a word according to Enlgish words optionally dependant on a <paramref name="number"/>
+        /// </summary>
+        /// <param name="word"></param>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public static string ToPlural(this string word, int number = 0) {
+            return word.ToPlural(Inflectors.English, number);
+        }
+
+        /// <summary>
+        /// Pluralizes a word according to the given inflector, optionally dependant on a <paramref name="number"/>
+        /// </summary>
+        /// <param name="word"></param>
+        /// <param name="inflector"></param>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public static string ToPlural(this string word, IInflector inflector, int number = 0) {
+            return inflector.ToPlural(word, number);
+        }
+
+        /// <summary>
+        /// Singularizes a word according to English words, optionally dependant on a <paramref name="number"/>
+        /// </summary>
+        /// <param name="word"></param>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public static string ToSingular(this string word, int number = 1) {
+            return word.ToSingular(Inflectors.English, number);
+        }
+
+        /// <summary>
+        /// Singularizes a word according to the given inflector, optionally dependant on a <paramref name="number"/>
+        /// </summary>
+        /// <param name="word"></param>
+        /// <param name="inflector"></param>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public static string ToSingular(this string word, IInflector inflector, int number = 1) {
+            return inflector.ToSingular(word, number);
+        }
+
+        /// <summary>
+        /// Returns a string in snake case. Often used for converting object names.
+        /// Is smart about repeating capital letters
+        /// </summary>
+        /// <example>
+        /// TransactionID => Transaction_ID
+        /// FirstName => First_Name
+        /// CPRNumber => CPR_Number
+        /// ReferenceIDNumber => Reference_ID_Number
+        /// </example>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string ToSnakeCase(this string input) {
+            input = input.Replace(' ', '_');
+            input = Regex.Replace(input, @"(?<=\p{Lu}{2,}|\p{Ll})(\p{Lu})(?=\p{Ll})", "_$1");
+            input = Regex.Replace(input, @"(?<=\p{Ll})(\p{Lu}{2,})", "_$1");
+            input = Regex.Replace(input, "_{2,}", "_");
+            return input;
+        }
+
+        /// <summary>
+        /// Converts the given string to title case using the English transformer
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="specials"></param>
+        /// <returns></returns>
+        public static string ToTitleCase(this string input, IEnumerable<string> specials = null) {
+            return input.ToTitleCase(TextCaseTrasnformers.English, specials);
+        }
+
+        /// <summary>
+        /// Converts the input string to title case using the given transformer
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="transformer"></param>
+        /// <returns></returns>
+        public static string ToTitleCase(this string input, ITextCaseTransformer transformer, IEnumerable<string> specials = null) {
+            return transformer.ToTitleCase(input, specials);
         }
 
         /// <summary>

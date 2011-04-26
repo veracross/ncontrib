@@ -100,6 +100,9 @@ namespace NContrib.Extensions {
             if (type == typeof(string))
                 return value.ToString();
 
+            if (type.IsEnum)
+                return Enum.Parse(type, value.ToString());
+
             // some objects have a TryParse() and Parse() method. let's see how we do with those
             /*
             object temp;
