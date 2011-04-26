@@ -386,6 +386,7 @@ namespace NContrib.Extensions {
         /// </summary>
         /// <param name="input"></param>
         /// <param name="transformer"></param>
+        /// <param name="specials"></param>
         /// <returns></returns>
         public static string ToTitleCase(this string input, ITextCaseTransformer transformer, IEnumerable<string> specials = null) {
             return transformer.ToTitleCase(input, specials);

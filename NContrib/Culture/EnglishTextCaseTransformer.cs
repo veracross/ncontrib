@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using NContrib.Extensions;
 
 namespace NContrib.Culture {
 
@@ -24,7 +23,7 @@ namespace NContrib.Culture {
 
         private static readonly Regex CapFirst = new Regex(@"^[" + Punct + @"]*?([\p{L}])");
 
-        private static readonly Regex SmallFirst = new Regex(@"(?i)^([" + Punct + @"]*)(" + Small + @")\b");
+        private static readonly Regex SmallFirst = new Regex(@"(?i)^([" + Punct + @"]*)(" + Small + @")\b(?=\p{L})");
 
         private static readonly Regex SmallLast = new Regex(@"(?i)\b(" + Small + @")[" + Punct + @"]?$");
 
@@ -41,6 +40,8 @@ namespace NContrib.Culture {
 
         private static readonly Regex MacMc = new Regex(@"^([Mm]a?c)(\w+)");
 
+        private static readonly Regex AllConsonants = new Regex(@"(?i)^\b*[^AEIOU]+\b*$");
+
 
         public string ToTitleCase(string title, IEnumerable<string> specials = null) {
 
@@ -53,26 +54,29 @@ namespace NContrib.Culture {
                 var word = readonlyWord;
 
                 if (specials != null) {
-                    var special = specials.SingleOrDefault(sp => Regex.IsMatch(word, sp, RegexOptions.IgnoreCase));
+                    const string reFormat = @"(?<=\b){0}(?=\b)";
+                    var special = specials.FirstOrDefault(sp => Regex.IsMatch(word, string.Format(reFormat, sp), RegexOptions.IgnoreCase));
                     if (special != null) {
-                        results.Add(Regex.Replace(word, special, special, RegexOptions.IgnoreCase));
+                        results.Add(Regex.Replace(word, string.Format(reFormat, special), special, RegexOptions.IgnoreCase));
                         continue;
                     }                    
                 }
                     
                 if (AllCaps.IsMatch(word)) {
-                    
-                    if (specials != null && specials.Contains(word)) {
-                        results.Add(word);
-                        continue;
-                    }
 
                     if (UcInitials.IsMatch(word)) {
                         results.Add(word);
                         continue;
                     }
 
+                    // words that contain ampersants are probably abbreviations. H&M, AT&T, Q&A, BB&B
                     if (word.Contains('&')) {
+                        results.Add(word);
+                        continue;
+                    }
+
+                    // words that only constain consonants are probably abbreviations and can keep their case
+                    if (AllConsonants.IsMatch(word)) {
                         results.Add(word);
                         continue;
                     }

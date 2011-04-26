@@ -33,7 +33,7 @@ namespace NContrib.Tests {
         }
 
         [Test]
-        public void ToTitleCase_Text_TitleCases() {
+        public void ToTitleCase_TitleCaseTextSourceFiles_TitleCases() {
 
             var successes = 0;
 
@@ -61,8 +61,18 @@ namespace NContrib.Tests {
 
             Assert.AreEqual("HSBC Bank, USA, N.A.", "HSBC BANK, USA, N.A.".ToTitleCase(specials));
             Assert.AreEqual("JPMorgan Chase Bank", "JPMORGAN CHASE BANK".ToTitleCase(specials));
+            Assert.AreEqual("ING Direct", "ING DIRECT".ToTitleCase(specials));
+            Assert.AreEqual("Sterling Bank", "STERLING BANK".ToTitleCase(specials), "Make sure specials don't interfere");
             Assert.AreEqual("OpenCable Officially Becomes tru2way",
                             "OpenCable officially becomes tru2way".ToTitleCase(new[] {"tru2way"}));
+        }
+
+        [Test]
+        public void ToTitleCase_Abbreviations_RetainCase() {
+
+            Assert.AreEqual("HSBC Bank", "HSBC BANK".ToTitleCase());
+            Assert.AreEqual("Connector for the FSB", "CONNECTOR FOR THE FSB".ToTitleCase());
+            Assert.AreEqual("AT&T Q&A Session", "AT&T Q&A SESSION".ToTitleCase());
         }
     }
 }
