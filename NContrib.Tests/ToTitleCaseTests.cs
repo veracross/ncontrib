@@ -69,7 +69,7 @@ namespace NContrib.Tests {
 
         [Test]
         public void ToTitleCase_Abbreviations_RetainCase() {
-
+            Assert.AreEqual("The Connecticut Bank & Trust Company", "THE CONNECTICUT BANK & TRUST COMPANY".ToTitleCase());
             Assert.AreEqual("HSBC Bank", "HSBC BANK".ToTitleCase());
             Assert.AreEqual("Connector for the FSB", "CONNECTOR FOR THE FSB".ToTitleCase());
             Assert.AreEqual("AT&T Q&A Session", "AT&T Q&A SESSION".ToTitleCase());

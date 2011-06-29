@@ -7,6 +7,21 @@ namespace NContrib {
 
     public static class SqlUri {
 
+        private static readonly Regex UriParser = new Regex(@"(?xi)
+            ^
+            (?<protocol>mssqls?)
+            ://
+            (?:
+                (?:
+                    (?<username>[^:@]+)
+                    (?: [:] (?<password>[^@]+) )?
+                )?
+                [@]
+            )?
+            (?:     (?<server>[^/]+) )
+            (?: [/] (?<database>\w+)   )?
+            $");
+
         /// <summary>
         /// Parses a SQL Server connection URI in the format
         /// mssql://username:password@server\instance/database
@@ -14,22 +29,8 @@ namespace NContrib {
         /// <param name="uri"></param>
         /// <returns></returns>
         public static string ParseSqlServerUri(string uri) {
-            const string re = @"(?xi)
-                ^
-                (?<protocol>mssqls?)
-                ://
-                (?:
-                    (?:
-                        (?<username>[^:@]+)
-                        (?: [:] (?<password>[^@]+) )?
-                    )?
-                    [@]
-                )?
-                (?:     (?<server>[^/]+) )
-                (?: [/] (?<database>\w+)   )?
-                $";
 
-            var match = Regex.Match(uri, re);
+            var match = UriParser.Match(uri);
 
             if (!match.Success)
                 throw new ArgumentException("Not recognised as a SQL Server connection string");
@@ -65,6 +66,10 @@ namespace NContrib {
             var cn = new SqlConnection(connectionString);
             cn.Open();
             return cn;
+        }
+
+        public static bool IsValidSqlUri(string input) {
+            return UriParser.IsMatch(input);
         }
     }
 }

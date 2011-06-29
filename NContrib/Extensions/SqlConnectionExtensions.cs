@@ -5,6 +5,10 @@ namespace NContrib.Extensions {
 
     public static class SqlConnectionExtensions {
 
+        public static FluidSqlDatabase ToFluidSqlDatabase(this SqlConnection cn) {
+            return new FluidSqlDatabase(cn);
+        }
+
         /// <summary>
         /// Creates a <see cref="SqlCommand"/> using the given connection
         /// </summary>
@@ -21,8 +25,19 @@ namespace NContrib.Extensions {
         /// </summary>
         /// <param name="cn"></param>
         /// <param name="command"></param>
-        public static void ExecuteNonQuery(this SqlConnection cn, string command) {
-            cn.CreateCommand(command).ExecuteNonQuery();
+        /// <param name="parameters"></param>
+        public static void ExecuteNonQuery(this SqlConnection cn, string command, object parameters = null) {
+            using (var cmd = cn.CreateCommand(command)) {
+                cmd.AddParameters(parameters);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static void ExecuteProcedureNonQuery(this SqlConnection cn, string procedureName, object parameters = null) {
+            using (var cmd = cn.CreateCommand(procedureName, CommandType.StoredProcedure)) {
+                cmd.AddParameters(parameters);
+                cmd.ExecuteNonQuery();
+            }
         }
 
         public static SqlDataReader ExecuteProcedureReader(this SqlConnection cn, string procedureName, object parameters = null) {
@@ -33,15 +48,17 @@ namespace NContrib.Extensions {
             return cn.ExecuteReader(query, CommandType.StoredProcedure, parameters);
         }
 
-        public static SqlDataReader ExecuteReader(this SqlConnection cn, string command, CommandType commandType, object parameters) {
+        public static SqlDataReader ExecuteReader(this SqlConnection cn, string command, CommandType commandType, object parameters = null) {
             using (var cmd = cn.CreateCommand(command, commandType)) {
                 cmd.AddParameters(parameters);
                 return cmd.ExecuteReader();
             }
         }
 
-        public static T ExecuteScalar<T>(this SqlConnection cn, string commandText, CommandType commandType = CommandType.Text) {
+        public static T ExecuteScalar<T>(this SqlConnection cn, string commandText, CommandType commandType = CommandType.Text, object parameters = null) {
             using (var cmd = cn.CreateCommand(commandText, commandType)) {
+                cmd.AddParameters(parameters);
+
                 var value = cmd.ExecuteScalar();
 
                 if (typeof(T) == typeof(bool)) {

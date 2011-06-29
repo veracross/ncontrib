@@ -17,7 +17,7 @@ namespace NContrib.Extensions {
         /// <param name="keyColumn"></param>
         /// <param name="valueColumn"></param>
         /// <returns></returns>
-        public static Dictionary<TKey, TValue> ExecuteDictionary<TKey, TValue>(this IDbCommand cmd, int keyColumn = 0, int valueColumn = 1) {
+        public static Dictionary<TKey, TValue> ExecuteVerticalDictionary<TKey, TValue>(this IDbCommand cmd, int keyColumn = 0, int valueColumn = 1) {
             var d = new Dictionary<TKey, TValue>();
 
             using (var dr = cmd.ExecuteReader()) {
@@ -39,7 +39,7 @@ namespace NContrib.Extensions {
         /// <param name="keyColumn"></param>
         /// <param name="valueColumn"></param>
         /// <returns></returns>
-        public static Dictionary<TKey, TValue> ExecuteDictionary<TKey, TValue>(this IDbCommand cmd, string keyColumn, string valueColumn) {
+        public static Dictionary<TKey, TValue> ExecuteVerticalDictionary<TKey, TValue>(this IDbCommand cmd, string keyColumn, string valueColumn) {
             var d = new Dictionary<TKey, TValue>();
 
             using (var dr = cmd.ExecuteReader()) {

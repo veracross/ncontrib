@@ -72,6 +72,13 @@ namespace NContrib.Tests {
         }
 
         [Test]
+        public void RegexReplace_VariousTextInput_Replaced() {
+            Assert.AreEqual("authorizenet", "authorize.net".RegexReplace(@"\P{L}", ""));
+            Assert.AreEqual("GSM", "GSM900".RegexReplace(@"\d", ""));
+        }
+
+
+        [Test]
         public void ToPlural_VariousTextNoNumber_Pluralizes() {
             // normal
             Assert.AreEqual("cars", "car".ToPlural());

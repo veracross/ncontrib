@@ -23,9 +23,9 @@ namespace NContrib.Culture {
 
         private static readonly Regex CapFirst = new Regex(@"^[" + Punct + @"]*?([\p{L}])");
 
-        private static readonly Regex SmallFirst = new Regex(@"(?i)^([" + Punct + @"]*)(" + Small + @")\b(?=\p{L})");
+        private static readonly Regex SmallFirst = new Regex(@"(?i)^([" + Punct + @"]*)(" + Small + @")(?=[^\w&]\p{L})");
 
-        private static readonly Regex SmallLast = new Regex(@"(?i)\b(" + Small + @")[" + Punct + @"]?$");
+        private static readonly Regex SmallLast = new Regex(@"(?i)(?<=\W)(" + Small + @")[" + Punct + @"]?$");
 
         private static readonly Regex Subphrase = new Regex(@"([:.;?!][ ])(" + Small + @")");
 

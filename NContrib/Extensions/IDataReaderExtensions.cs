@@ -31,6 +31,13 @@ namespace NContrib.Extensions {
             return Enumerable.Range(0, dr.FieldCount).Select(dr.GetName).ToArray();
         }
 
+        public static IDictionary<string, TValue> GetRowAsDictionary<TValue>(this IDataReader dr) {
+            var temp = new Dictionary<string, TValue>();
+            for (var i = 0; i < dr.FieldCount; i++)
+                temp.Add(dr.GetName(i), dr.GetValue(i).ConvertTo<TValue>());
+            return temp;
+        }
+
         /// <summary>
         /// Returns the value from the specified column and converts it using <see cref="ObjectExtensions.ConvertTo"/>
         /// When the column value is null, the default for type T is returned

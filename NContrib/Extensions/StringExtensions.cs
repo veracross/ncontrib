@@ -239,6 +239,17 @@ namespace NContrib.Extensions {
             return input.ParseDictionary(pairSeparator, keyValueSeparator, EqualityComparer<string>.Default);
         }
 
+        /// <summary>
+        /// Shortcut to <see cref="Regex.Replace(string, string, string)"/>
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="pattern"></param>
+        /// <param name="replacement"></param>
+        /// <returns></returns>
+        public static string RegexReplace(this string input, string pattern, string replacement) {
+            return Regex.Replace(input, pattern, replacement);
+        }
+
         /// <summary>Repeats a character, turning it into a string</summary>
         /// <param name="input"></param>
         /// <param name="times"></param>
@@ -265,6 +276,35 @@ namespace NContrib.Extensions {
         /// <returns></returns>
         public static string Right(this string input, int length) {
             return input.Substring(input.Length - length);
+        }
+
+        /// <summary>
+        /// Wraps the string as a <see cref="ShorthandString"/>
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static ShorthandString S(this string s) {
+            return new ShorthandString(s);
+        }
+
+        /// <summary>
+        /// Wraps the string as a <see cref="ShorthandString"/>
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="cultureName">Culture name to be used in formatting. Ex) en-GB, sv-SE, ja-JP</param>
+        /// <returns></returns>
+        public static ShorthandString S(this string s, string cultureName) {
+            return new ShorthandString(s, cultureName);
+        }
+
+        /// <summary>
+        /// Wraps the string as a <see cref="ShorthandString"/>
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="formatProvider">Format provider to be used during formatting</param>
+        /// <returns></returns>
+        public static ShorthandString S(this string s, IFormatProvider formatProvider) {
+            return new ShorthandString(s, formatProvider);
         }
 
         /// <summary>
