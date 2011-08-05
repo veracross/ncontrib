@@ -23,7 +23,8 @@ namespace NContrib.Extensions {
         /// <param name="equalityComparer"></param>
         /// <returns></returns>
         public static Dictionary<string, string> ToDictionary(this NameValueCollection collection, IEqualityComparer<string> equalityComparer) {
-            return collection.Keys.Cast<string>().ToDictionary(s => s, s => collection[s], equalityComparer);
+            return Enumerable.Range(0, collection.Count)
+                .ToDictionary(collection.GetKey, collection.Get, equalityComparer);
         }
 
     }

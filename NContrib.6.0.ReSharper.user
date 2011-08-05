@@ -1,0 +1,104 @@
+<Configuration>
+  <RecentFiles>
+    <RecentFiles>
+      <File id="41063360-C3FC-4EFE-819B-7FAF2516FCA8/f:StringExtensionsTests.cs" caret="3410" fromTop="10" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/d:Extensions/f:StringExtensions.cs" caret="13006" fromTop="51" />
+      <File id="41063360-C3FC-4EFE-819B-7FAF2516FCA8/f:SqlUriTests.cs" caret="913" fromTop="26" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:SqlUri.cs" caret="470" fromTop="14" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="2861" fromTop="17" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/d:Extensions/f:ObjectExtensions.cs" caret="4075" fromTop="25" />
+    </RecentFiles>
+    <RecentEdits>
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/d:Extensions/f:StringExtensions.cs" caret="48" fromTop="1" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/d:Extensions/f:StringExtensions.cs" caret="9324" fromTop="30" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/d:Extensions/f:StringExtensions.cs" caret="13006" fromTop="51" />
+      <File id="41063360-C3FC-4EFE-819B-7FAF2516FCA8/f:StringExtensionsTests.cs" caret="3122" fromTop="30" />
+      <File id="41063360-C3FC-4EFE-819B-7FAF2516FCA8/f:StringExtensionsTests.cs" caret="5259" fromTop="53" />
+      <File id="41063360-C3FC-4EFE-819B-7FAF2516FCA8/f:SqlUriTests.cs" caret="701" fromTop="21" />
+      <File id="41063360-C3FC-4EFE-819B-7FAF2516FCA8/f:SqlUriTests.cs" caret="1367" fromTop="36" />
+      <File id="41063360-C3FC-4EFE-819B-7FAF2516FCA8/f:SqlUriTests.cs" caret="2022" fromTop="51" />
+      <File id="41063360-C3FC-4EFE-819B-7FAF2516FCA8/f:SqlUriTests.cs" caret="2661" fromTop="48" />
+      <File id="41063360-C3FC-4EFE-819B-7FAF2516FCA8/f:SqlUriTests.cs" caret="3284" fromTop="45" />
+      <File id="41063360-C3FC-4EFE-819B-7FAF2516FCA8/f:SqlUriTests.cs" caret="3796" fromTop="58" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:SqlUri.cs" caret="1556" fromTop="37" />
+      <File id="41063360-C3FC-4EFE-819B-7FAF2516FCA8/f:SqlUriTests.cs" caret="550" fromTop="16" />
+      <File id="41063360-C3FC-4EFE-819B-7FAF2516FCA8/f:SqlUriTests.cs" caret="948" fromTop="27" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:SqlUri.cs" caret="1558" fromTop="38" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:SqlUri.cs" caret="969" fromTop="24" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:SqlUri.cs" caret="473" fromTop="14" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="8267" fromTop="238" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="172" fromTop="9" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="118" fromTop="4" />
+    </RecentEdits>
+  </RecentFiles>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <UnitTestRunner>
+    <Providers />
+  </UnitTestRunner>
+  <UnitTestRunnerNUnit>
+    <NUnitInstallDir>C:\Program Files (x86)\NUnit 2.5.10\bin\net-2.0\lib</NUnitInstallDir>
+    <UseAddins>Never</UseAddins>
+  </UnitTestRunnerNUnit>
+  <SettingsComponent>
+    <string />
+    <integer />
+    <boolean>
+      <setting name="SolutionAnalysisEnabled">False</setting>
+    </boolean>
+  </SettingsComponent>
+  <UnitTestSessions>
+    <Session>
+      <Name>Session #1</Name>
+      <Elements>
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.SqlUriTests" type="NUnitTestFixtureElement" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.StringExtensionsTests" type="NUnitTestFixtureElement" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.StringExtensionsTests.ContainsOnly_StringWithOnlyGivenCharacters_True" ParentId="NContrib.Tests.StringExtensionsTests" type="NUnitTestElement" TypeName="NContrib.Tests.StringExtensionsTests" MethodName="ContainsOnly_StringWithOnlyGivenCharacters_True" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.StringExtensionsTests.FromIndexOf_ValidRegexPatterns_Pass" ParentId="NContrib.Tests.StringExtensionsTests" type="NUnitTestElement" TypeName="NContrib.Tests.StringExtensionsTests" MethodName="FromIndexOf_ValidRegexPatterns_Pass" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.StringExtensionsTests.IsBlank_BlankText_Detected" ParentId="NContrib.Tests.StringExtensionsTests" type="NUnitTestElement" TypeName="NContrib.Tests.StringExtensionsTests" MethodName="IsBlank_BlankText_Detected" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.StringExtensionsTests.IsBlank_NonBlankText_Detected" ParentId="NContrib.Tests.StringExtensionsTests" type="NUnitTestElement" TypeName="NContrib.Tests.StringExtensionsTests" MethodName="IsBlank_NonBlankText_Detected" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.StringExtensionsTests.IsNotBlank_BlankText_Detected" ParentId="NContrib.Tests.StringExtensionsTests" type="NUnitTestElement" TypeName="NContrib.Tests.StringExtensionsTests" MethodName="IsNotBlank_BlankText_Detected" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.StringExtensionsTests.IsNotBlank_NonBlankText_Detected" ParentId="NContrib.Tests.StringExtensionsTests" type="NUnitTestElement" TypeName="NContrib.Tests.StringExtensionsTests" MethodName="IsNotBlank_NonBlankText_Detected" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.StringExtensionsTests.Left_StringOfAnyLength_ReturnsExpected" ParentId="NContrib.Tests.StringExtensionsTests" type="NUnitTestElement" TypeName="NContrib.Tests.StringExtensionsTests" MethodName="Left_StringOfAnyLength_ReturnsExpected" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.SqlUriTests.ParseSqlServerUri_EncryptServerDatabaseTrusted_Parses" ParentId="NContrib.Tests.SqlUriTests" type="NUnitTestElement" TypeName="NContrib.Tests.SqlUriTests" MethodName="ParseSqlServerUri_EncryptServerDatabaseTrusted_Parses" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.SqlUriTests.ParseSqlServerUri_EncryptUsernamePasswordServerDatabases_Parses" ParentId="NContrib.Tests.SqlUriTests" type="NUnitTestElement" TypeName="NContrib.Tests.SqlUriTests" MethodName="ParseSqlServerUri_EncryptUsernamePasswordServerDatabases_Parses" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.SqlUriTests.ParseSqlServerUri_ServerNoDatabaseTrusted_Parses" ParentId="NContrib.Tests.SqlUriTests" type="NUnitTestElement" TypeName="NContrib.Tests.SqlUriTests" MethodName="ParseSqlServerUri_ServerNoDatabaseTrusted_Parses" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.SqlUriTests.ParseSqlServerUri_UrlEncodedParameters_Parses" ParentId="NContrib.Tests.SqlUriTests" type="NUnitTestElement" TypeName="NContrib.Tests.SqlUriTests" MethodName="ParseSqlServerUri_UrlEncodedParameters_Parses" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.SqlUriTests.ParseSqlServerUri_UsernamePasswordServerDatabases_Parses" ParentId="NContrib.Tests.SqlUriTests" type="NUnitTestElement" TypeName="NContrib.Tests.SqlUriTests" MethodName="ParseSqlServerUri_UsernamePasswordServerDatabases_Parses" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.SqlUriTests.ParseSqlServerUri_UsernameServerDatabases_Parses" ParentId="NContrib.Tests.SqlUriTests" type="NUnitTestElement" TypeName="NContrib.Tests.SqlUriTests" MethodName="ParseSqlServerUri_UsernameServerDatabases_Parses" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.StringExtensionsTests.RegexReplace_VariousTextInput_Replaced" ParentId="NContrib.Tests.StringExtensionsTests" type="NUnitTestElement" TypeName="NContrib.Tests.StringExtensionsTests" MethodName="RegexReplace_VariousTextInput_Replaced" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.StringExtensionsTests.Right_String_ReturnsRightCharacters" ParentId="NContrib.Tests.StringExtensionsTests" type="NUnitTestElement" TypeName="NContrib.Tests.StringExtensionsTests" MethodName="Right_String_ReturnsRightCharacters" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.StringExtensionsTests.ToCamelCase_VariousText_CamelCaseAsExpected" ParentId="NContrib.Tests.StringExtensionsTests" type="NUnitTestElement" TypeName="NContrib.Tests.StringExtensionsTests" MethodName="ToCamelCase_VariousText_CamelCaseAsExpected" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.StringExtensionsTests.ToPlural_VariousTextNoNumber_Pluralizes" ParentId="NContrib.Tests.StringExtensionsTests" type="NUnitTestElement" TypeName="NContrib.Tests.StringExtensionsTests" MethodName="ToPlural_VariousTextNoNumber_Pluralizes" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.StringExtensionsTests.ToSingular_VariousTextNoNumber_Singularizes" ParentId="NContrib.Tests.StringExtensionsTests" type="NUnitTestElement" TypeName="NContrib.Tests.StringExtensionsTests" MethodName="ToSingular_VariousTextNoNumber_Singularizes" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.StringExtensionsTests.ToSnakeCase_CamelCaseText_Snakeifies" ParentId="NContrib.Tests.StringExtensionsTests" type="NUnitTestElement" TypeName="NContrib.Tests.StringExtensionsTests" MethodName="ToSnakeCase_CamelCaseText_Snakeifies" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+        <UnitTestElement Provider="nUnit" Id="NContrib.Tests.StringExtensionsTests.UntilIndexOf_ValidRegexPatterns_Pass" ParentId="NContrib.Tests.StringExtensionsTests" type="NUnitTestElement" TypeName="NContrib.Tests.StringExtensionsTests" MethodName="UntilIndexOf_ValidRegexPatterns_Pass" Project="41063360-C3FC-4EFE-819B-7FAF2516FCA8" />
+      </Elements>
+    </Session>
+  </UnitTestSessions>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="CSharpCodeCompletionContext">
+      <Item value="input" priority="223" />
+      <Item value="length" priority="63" />
+      <Item value="string" priority="63" />
+      <Item value="Assert`0" priority="255" />
+      <Item value="s" priority="31" />
+      <Item value="public" priority="31" />
+      <Item value="void" priority="31" />
+      <Item value="null" priority="63" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.String">
+      <Item value="Length" priority="80" />
+      <Item value="Substring`0" priority="26" />
+      <Item value="Right`0" priority="53" />
+      <Item value="Left`0" priority="134" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.String">
+      <Item value="IsNullOrEmpty`0" priority="53" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@NUnit.Framework.Assert">
+      <Item value="AreEqual`0" priority="215" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+</Configuration>

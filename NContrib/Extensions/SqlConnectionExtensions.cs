@@ -5,10 +5,6 @@ namespace NContrib.Extensions {
 
     public static class SqlConnectionExtensions {
 
-        public static FluidSqlDatabase ToFluidSqlDatabase(this SqlConnection cn) {
-            return new FluidSqlDatabase(cn);
-        }
-
         /// <summary>
         /// Creates a <see cref="SqlCommand"/> using the given connection
         /// </summary>

@@ -70,9 +70,8 @@
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Extensions\XDocumentExtensions.cs" />
     <Compile Include="Extensions\XmlExtensions.cs" />
-    <Compile Include="FluidSqlDatabase.cs" />
+    <Compile Include="FluidSql.cs" />
     <Compile Include="Json.cs" />
-    <Compile Include="LoremIpsum.cs" />
     <Compile Include="ObjectDescriber.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="RegexLibrary.cs" />

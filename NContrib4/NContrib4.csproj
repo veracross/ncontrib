@@ -42,6 +42,8 @@
   <ItemGroup>
     <Compile Include="DynamicConfigurationSectionHandler.cs" />
     <Compile Include="DynamicXElement.cs" />
+    <Compile Include="DynamicDataRecord.cs" />
+    <Compile Include="Extensions\FluidSqlExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

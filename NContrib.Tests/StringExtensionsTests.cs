@@ -72,6 +72,15 @@ namespace NContrib.Tests {
         }
 
         [Test]
+        public void Left_StringOfAnyLength_ReturnsExpected() {
+            Assert.AreEqual("MacBook", "MacBook Pro".Left(7));
+
+            Assert.AreEqual("MacBook", "MacBook".Left(7));
+            Assert.AreEqual("MacBook", "MacBook".Left(100));
+            Assert.AreEqual(null, ((string)null).Left(100));
+        }
+
+        [Test]
         public void RegexReplace_VariousTextInput_Replaced() {
             Assert.AreEqual("authorizenet", "authorize.net".RegexReplace(@"\P{L}", ""));
             Assert.AreEqual("GSM", "GSM900".RegexReplace(@"\d", ""));
@@ -117,6 +126,11 @@ namespace NContrib.Tests {
 
             Assert.AreEqual("Bose", s.Right(4));
             Assert.AreEqual("e", s.Right(1));
+
+            Assert.AreEqual("MacBook", "MacBook".Right(20));
+            Assert.AreEqual("Pro", "MacBook Pro".Right(3));
+
+            Assert.AreEqual(null, ((string)null).Left(100));
         }
 
         [Test]

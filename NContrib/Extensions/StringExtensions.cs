@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -203,7 +202,7 @@ namespace NContrib.Extensions {
         /// <param name="length"></param>
         /// <returns></returns>
         public static string Left(this string input, int length) {
-            return input.Substring(0, length);
+            return string.IsNullOrEmpty(input) || input.Length <= length ? input : input.Substring(0, length);
         }
 
         /// <summary>Returns a string Dictionary by parsing a list of delimited key/value pairs</summary>
@@ -275,7 +274,7 @@ namespace NContrib.Extensions {
         /// <param name="length"></param>
         /// <returns></returns>
         public static string Right(this string input, int length) {
-            return input.Substring(input.Length - length);
+            return string.IsNullOrEmpty(input) || input.Length <= length ? input : input.Substring(input.Length - length);
         }
 
         /// <summary>
