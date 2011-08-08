@@ -4,9 +4,9 @@
       <File id="41063360-C3FC-4EFE-819B-7FAF2516FCA8/f:StringExtensionsTests.cs" caret="3410" fromTop="10" />
       <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/d:Extensions/f:StringExtensions.cs" caret="13006" fromTop="51" />
       <File id="41063360-C3FC-4EFE-819B-7FAF2516FCA8/f:SqlUriTests.cs" caret="913" fromTop="26" />
-      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:SqlUri.cs" caret="470" fromTop="14" />
-      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="2861" fromTop="17" />
-      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/d:Extensions/f:ObjectExtensions.cs" caret="4075" fromTop="25" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/d:Extensions/f:ObjectExtensions.cs" caret="4855" fromTop="41" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:SqlUri.cs" caret="470" fromTop="17" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="1461" fromTop="34" />
     </RecentFiles>
     <RecentEdits>
       <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/d:Extensions/f:StringExtensions.cs" caret="48" fromTop="1" />
@@ -26,9 +26,19 @@
       <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:SqlUri.cs" caret="1558" fromTop="38" />
       <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:SqlUri.cs" caret="969" fromTop="24" />
       <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:SqlUri.cs" caret="473" fromTop="14" />
-      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="8267" fromTop="238" />
-      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="172" fromTop="9" />
       <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="118" fromTop="4" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="10277" fromTop="55" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="352" fromTop="15" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="2201" fromTop="54" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="9365" fromTop="48" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="342" fromTop="13" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="8899" fromTop="28" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="809" fromTop="26" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="1734" fromTop="50" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="2414" fromTop="23" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="9743" fromTop="44" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="9669" fromTop="45" />
+      <File id="0814E816-B49E-416B-83D6-232E1DD8DD37/f:FluidSql.cs" caret="1139" fromTop="34" />
     </RecentEdits>
   </RecentFiles>
   <NAntValidationSettings>

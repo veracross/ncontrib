@@ -7,7 +7,26 @@ using NContrib.Extensions;
 
 namespace NContrib {
 
+    public struct FluidSqlEventHandler<T> {
+
+        public Action<FluidSql, T> Handler { get; private set; }
+
+        public FluidSqlEventHandler(Action<FluidSql, T> handler) : this() {
+            Handler = handler;
+        }
+    }
+
     public class FluidSql {
+
+        public static class BuiltinHandlers {
+            
+            public static string FormatProcedureError(FluidSql fs, SqlException ex) {
+
+                var args = fs.Parameters.Select(p => "@" + p.Key + " = " + p.Value).Join(", ");
+
+                return "Error executing procedure " + fs.Command.CommandText + " (" + args + "): " + ex.Message;
+            }
+        }
 
         public SqlConnection Connection { get; protected set; }
 
@@ -26,6 +45,10 @@ namespace NContrib {
 
         protected SqlParameter ReturnValueParameter { get; set; }
 
+        protected List<FluidSqlEventHandler<SqlException>> ErrorHandlers = new List<FluidSqlEventHandler<SqlException>>();
+
+        protected List<FluidSqlEventHandler<SqlInfoMessageEventArgs>> InfoHandlers = new List<FluidSqlEventHandler<SqlInfoMessageEventArgs>>();
+
         public FluidSql(string connectionString, bool autoClose = true)
             : this(new SqlConnection(connectionString)) {
 
@@ -34,6 +57,16 @@ namespace NContrib {
 
         public FluidSql(SqlConnection connection) {
             Connection = connection;
+        }
+
+        public FluidSql Error(Action<FluidSql, SqlException> handler) {
+            ErrorHandlers.Add(new FluidSqlEventHandler<SqlException>(handler));
+            return this;
+        }
+
+        public FluidSql Info(Action<FluidSql, SqlInfoMessageEventArgs> handler) {
+            InfoHandlers.Add(new FluidSqlEventHandler<SqlInfoMessageEventArgs>(handler));
+            return this;
         }
 
         public FluidSql AddParameter(string name, object value) {
@@ -205,9 +238,13 @@ namespace NContrib {
             try {
                 return executor();
             }
-            //catch (Exception ex) {
-                // TODO: user-defined error handlers and possible re-throw
-            //}
+            catch (SqlException ex) {
+                if (ErrorHandlers.Count == 0)
+                    throw ex;
+
+                foreach (var h in ErrorHandlers)
+                    h.Handler(this, ex);
+            }
             finally {
                 OnExecutedCommand(dataReadComplete);
             }
@@ -218,8 +255,22 @@ namespace NContrib {
 
         #region Internal Events
         protected void OnExecutingCommand() {
-            if (Connection.State != ConnectionState.Open)
-                Connection.Open();
+            if (Connection.State != ConnectionState.Open) {
+                try {
+                    Connection.Open();
+                }
+                catch (SqlException ex) {
+                    if (ErrorHandlers.Count == 0)
+                        throw ex;
+
+                    foreach (var h in ErrorHandlers)
+                        h.Handler(this, ex);
+                }
+            }
+
+            if (InfoHandlers.Count > 0)
+                InfoHandlers.ToList()
+                    .ForEach(h => Connection.InfoMessage += (sender, e) => h.Handler(this, e));
 
             PrepareCommand();
         }
@@ -234,6 +285,14 @@ namespace NContrib {
         protected void OnDataRead() {
             if (AutoClose && Connection.State != ConnectionState.Closed)
                 Connection.Close();
+        }
+
+        protected void OnConnectionError() {
+            
+        }
+
+        protected void OnCommandError() {
+            
         }
         #endregion
     }
