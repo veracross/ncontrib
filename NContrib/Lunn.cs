@@ -11,10 +11,10 @@ namespace NContrib {
     public static class Luhn {
 
         /// <summary>Generates a number that passes Luhn validation</summary>
-        /// <param name="len"></param>
+        /// <param name="length"></param>
         /// <returns></returns>
-        public static string Generate(int len) {
-            return Generate(len, null);
+        public static string Generate(int length) {
+            return Generate(length, null);
         }
 
         /// <summary>Checks to see if this number as a string passes a Luhn check</summary>
