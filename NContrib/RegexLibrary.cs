@@ -15,6 +15,11 @@
 
             /// <summary>Two digits 01 to 31. Zero required.</summary>
             public const string Day = @"(?<day>0[1-9]|[12][0-9]|3[01])";
+
+            /// <summary>
+            /// yyyy-MM-dd: Constrainted to year 1000 - 2999
+            /// </summary>
+            public const string Iso8601 = Year4Digit + "[-]" + Month + "[-]" + Day;
         }
 
         public static class NationalId {

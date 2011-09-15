@@ -16,6 +16,19 @@ namespace NContrib {
         }
     }
 
+    public class CommandExecutedEventArgs : EventArgs {
+
+        public TimeSpan TimeTaken { get; protected set; }
+
+        public string Command { get; protected set; }
+
+        public CommandExecutedEventArgs(TimeSpan timeTaken, string command) {
+            TimeTaken = timeTaken;
+            Command = command;
+        }
+        
+    }
+
     public class FluidSql {
 
         public static class BuiltinHandlers {
@@ -25,6 +38,17 @@ namespace NContrib {
                 var args = fs.Parameters.Select(p => "@" + p.Key + " = " + p.Value).Join(", ");
 
                 return "Error executing procedure " + fs.Command.CommandText + " (" + args + "): " + ex.Message;
+            }
+        }
+
+        public static class FieldNameConverters {
+            
+            public static string TitleCase(string name) {
+                return System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(name).Replace("_", "");
+            }
+
+            public static string CamelCase(string name) {
+                return name.ToCamelCase();
             }
         }
 
@@ -40,6 +64,10 @@ namespace NContrib {
         public int CommandExecutionCount { get; protected set; }
 
         public int RecordsAffected { get; protected set; }
+
+        public TimeSpan TimeTaken { get; protected set; }
+
+        public event EventHandler<CommandExecutedEventArgs> Executed;
 
         protected readonly IDictionary<string, object> Parameters = new Dictionary<string, object>();
 
@@ -66,6 +94,11 @@ namespace NContrib {
 
         public FluidSql Info(Action<FluidSql, SqlInfoMessageEventArgs> handler) {
             InfoHandlers.Add(new FluidSqlEventHandler<SqlInfoMessageEventArgs>(handler));
+            return this;
+        }
+
+        public FluidSql ExecutedHandler(EventHandler<CommandExecutedEventArgs> handler) {
+            Executed += handler;
             return this;
         }
 
@@ -125,12 +158,12 @@ namespace NContrib {
             return InternalExecuteScalar().ConvertTo<T>();
         }
 
-        public IEnumerable<IDictionary<string, object>> ExecuteDictionaries() {
-            return ExecuteDictionaries<object>();
+        public IEnumerable<IDictionary<string, object>> ExecuteDictionaries(Func<string, string> fieldNameConverter = null) {
+            return ExecuteDictionaries<object>(fieldNameConverter);
         }
 
-        public IEnumerable<IDictionary<string, TValue>> ExecuteDictionaries<TValue>() {
-            var temp = ExecuteAndTransform(dr => dr.GetRowAsDictionary<TValue>());
+        public IEnumerable<IDictionary<string, TValue>> ExecuteDictionaries<TValue>(Func<string, string> fieldNameConverter = null) {
+            var temp = ExecuteAndTransform(dr => dr.GetRowAsDictionary<TValue>(fieldNameConverter));
             OnDataRead();
             return temp;
         }
@@ -236,7 +269,11 @@ namespace NContrib {
             OnExecutingCommand();
 
             try {
-                return executor();
+                var start = DateTime.Now;
+                var result = executor();
+                TimeTaken = DateTime.Now - start;
+
+                return result;
             }
             catch (SqlException ex) {
                 if (ErrorHandlers.Count == 0)
@@ -277,6 +314,9 @@ namespace NContrib {
 
         protected void OnExecutedCommand(bool dataReadComplete = false) {
             CommandExecutionCount++;
+
+            if (Executed != null)
+                Executed(this, new CommandExecutedEventArgs(TimeTaken, Command.CommandText));
 
             if (dataReadComplete)
                 OnDataRead();

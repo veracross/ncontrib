@@ -31,10 +31,15 @@ namespace NContrib.Extensions {
             return Enumerable.Range(0, dr.FieldCount).Select(dr.GetName).ToArray();
         }
 
-        public static IDictionary<string, TValue> GetRowAsDictionary<TValue>(this IDataReader dr) {
+        public static IDictionary<string, TValue> GetRowAsDictionary<TValue>(this IDataReader dr, Func<string, string> fieldNameConverter = null) {
             var temp = new Dictionary<string, TValue>();
+            
+            if (fieldNameConverter == null)
+                fieldNameConverter = s => s;
+
             for (var i = 0; i < dr.FieldCount; i++)
-                temp.Add(dr.GetName(i), dr.GetValue(i).ConvertTo<TValue>());
+                temp.Add(fieldNameConverter(dr.GetName(i)), dr.GetValue(i).ConvertTo<TValue>());
+
             return temp;
         }
 
