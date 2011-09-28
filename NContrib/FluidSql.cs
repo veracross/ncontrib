@@ -22,11 +22,13 @@ namespace NContrib {
 
         public string Command { get; protected set; }
 
-        public CommandExecutedEventArgs(TimeSpan timeTaken, string command) {
+        public SqlParameterCollection Parameters { get; protected set; }
+
+        public CommandExecutedEventArgs(TimeSpan timeTaken, string command, SqlParameterCollection parameters) {
             TimeTaken = timeTaken;
             Command = command;
+            Parameters = parameters;
         }
-        
     }
 
     public class FluidSql {
@@ -77,6 +79,8 @@ namespace NContrib {
 
         protected List<FluidSqlEventHandler<SqlInfoMessageEventArgs>> InfoHandlers = new List<FluidSqlEventHandler<SqlInfoMessageEventArgs>>();
 
+        protected List<FluidSqlEventHandler<StateChangeEventArgs>> ConnectionStateChangeHandlers = new List<FluidSqlEventHandler<StateChangeEventArgs>>();
+
         public FluidSql(string connectionString, bool autoClose = true)
             : this(new SqlConnection(connectionString)) {
 
@@ -97,13 +101,18 @@ namespace NContrib {
             return this;
         }
 
+        public FluidSql ConnectionStateChange(Action<FluidSql, StateChangeEventArgs> handler) {
+            ConnectionStateChangeHandlers.Add(new FluidSqlEventHandler<StateChangeEventArgs>(handler));
+            return this;
+        }
+
         public FluidSql ExecutedHandler(EventHandler<CommandExecutedEventArgs> handler) {
             Executed += handler;
             return this;
         }
 
         public FluidSql AddParameter(string name, object value) {
-            Parameters.Add(name, value);
+            Parameters.Add(name.ToSnakeCase(), value);
             return this;
         }
 
@@ -112,7 +121,7 @@ namespace NContrib {
                 return this;
 
             return AddParameters(parameters.GetType().GetProperties()
-                                     .ToDictionary(p => p.Name, p => p.GetValue(parameters, null)));
+                .ToDictionary(p => p.Name, p => p.GetValue(parameters, null)));
         }
 
         public FluidSql AddParameters(IDictionary<string, object> parameters) {
@@ -137,6 +146,29 @@ namespace NContrib {
             CreateCommand(textCommand, CommandType.Text, parameters);
             return this;
         }
+
+        public FluidSql CreateInsertCommand(string table, IDictionary<string, object> fields) {
+
+            var sql = "insert into " + table +
+                " (" + fields.Keys.Join(", ") + ")" +
+                " values(" + fields.Keys.Select(k => "@" + k).Join(", ") + ")";
+
+            CreateTextCommand(sql);
+            AddParameters(fields);
+
+            return this;
+        }
+
+        public FluidSql CreateUpdateCommand(string table, IDictionary<string, object> fields, string where) {
+
+            var sql = "update " + table + " set " + fields.Keys.Select(f => f + " = @" + f).Join(", ") + " where " + where;
+
+            CreateTextCommand(sql);
+            AddParameters(fields);
+
+            return this;
+        }
+
         #endregion
 
         #region Public execution
@@ -196,6 +228,12 @@ namespace NContrib {
             OnDataRead();
             return temp;
         }
+
+        public T ExecuteScopeIdentity<T>() {
+            Command.CommandText += "; select scope_identity()";
+            return ExecuteScalar<T>();
+        }
+
         #endregion
 
         #region Inline value assignment
@@ -232,8 +270,7 @@ namespace NContrib {
         }
 
         protected void CreateCommand(string commandText, CommandType commandType, object parameters = null) {
-            Command = new SqlCommand(commandText, Connection);
-            Command.CommandType = commandType;
+            Command = new SqlCommand(commandText, Connection) {CommandType = commandType};
             AddParameters(parameters);
 
             if (commandType == CommandType.StoredProcedure)
@@ -292,6 +329,15 @@ namespace NContrib {
 
         #region Internal Events
         protected void OnExecutingCommand() {
+
+            if (ConnectionStateChangeHandlers.Count > 0)
+                ConnectionStateChangeHandlers.ToList()
+                    .ForEach(h => Connection.StateChange += (sender, e) => h.Handler(this, e));
+
+            if (InfoHandlers.Count > 0)
+                InfoHandlers.ToList()
+                    .ForEach(h => Connection.InfoMessage += (sender, e) => h.Handler(this, e));
+
             if (Connection.State != ConnectionState.Open) {
                 try {
                     Connection.Open();
@@ -305,10 +351,6 @@ namespace NContrib {
                 }
             }
 
-            if (InfoHandlers.Count > 0)
-                InfoHandlers.ToList()
-                    .ForEach(h => Connection.InfoMessage += (sender, e) => h.Handler(this, e));
-
             PrepareCommand();
         }
 
@@ -316,7 +358,7 @@ namespace NContrib {
             CommandExecutionCount++;
 
             if (Executed != null)
-                Executed(this, new CommandExecutedEventArgs(TimeTaken, Command.CommandText));
+                Executed(this, new CommandExecutedEventArgs(TimeTaken, Command.CommandText, Command.Parameters));
 
             if (dataReadComplete)
                 OnDataRead();

@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FluidSqlTests.cs" />
     <Compile Include="International\CountryTests.cs" />
     <Compile Include="International\CurrencyTests.cs" />
     <Compile Include="DateTimeExtensionsTests.cs" />

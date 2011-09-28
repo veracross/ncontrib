@@ -75,6 +75,7 @@
     <Compile Include="ObjectDescriber.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="RegexLibrary.cs" />
+    <Compile Include="RuhRohException.cs" />
     <Compile Include="ShorthandString.cs" />
     <Compile Include="SqlUri.cs" />
     <Compile Include="StringInjector.cs" />

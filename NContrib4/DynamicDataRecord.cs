@@ -34,5 +34,16 @@ namespace NContrib4 {
         public override bool TrySetMember(SetMemberBinder binder, object value) {
             return false;
         }
+
+        public dynamic ToExpandoObject() {
+
+            dynamic x = new ExpandoObject();
+            var d = x as IDictionary<string, object>;
+
+            foreach (var p in _fields)
+                d[p.Key] = p.Value;
+
+            return x;
+        }
     }
 }

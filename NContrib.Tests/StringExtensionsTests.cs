@@ -8,10 +8,10 @@ namespace NContrib.Tests {
 
         [Test]
         public void ToCamelCase_VariousText_CamelCaseAsExpected() {
-            var fodder = new[] { "background-repeat-x", "background color", "transaction ID", "transaction_id", "x-pos" };
+            var fodder = new[] { "background-repeat-x", "background color", "transaction ID", "transaction_id", "x-pos", "class_pk" };
 
-            var expectedLower = new[] {"backgroundRepeatX", "backgroundColor", "transactionId", "transactionId", "xPos"};
-            var expectedUpper = new[] {"BackgroundRepeatX", "BackgroundColor", "TransactionId", "TransactionId", "XPos"};
+            var expectedLower = new[] {"backgroundRepeatX", "backgroundColor", "transactionId", "transactionId", "xPos", "classPk"};
+            var expectedUpper = new[] {"BackgroundRepeatX", "BackgroundColor", "TransactionId", "TransactionId", "XPos", "ClassPk"};
 
             for (var i = 0; i < fodder.Length; i++) {
                 Assert.AreEqual(expectedLower[i], fodder[i].ToCamelCase(TextTransform.Lower), "Lower Test");
