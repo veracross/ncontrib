@@ -220,6 +220,18 @@ namespace NContrib {
             return temp;
         }
 
+        public ILookup<TKey, TValue> ExecuteVerticalLookup<TKey, TValue>(int keyCol = 0, int valCol = 0) {
+
+            return ExecuteAndTransform(r => new {Key = r.GetValue<TKey>(keyCol), Value = r.GetValue<TValue>(valCol)})
+                .ToLookup(o => o.Key, o => o.Value);
+        }
+
+        public ILookup<TKey, TValue> ExecuteVerticalLookup<TKey, TValue>(string keyCol, string valCol) {
+
+            return ExecuteAndTransform(r => new { Key = r.GetValue<TKey>(keyCol), Value = r.GetValue<TValue>(valCol) })
+                .ToLookup(o => o.Key, o => o.Value);
+        }
+
         public IEnumerable<T> ExecuteAndTransform<T>(Converter<IDataReader, T> converter) {
             IEnumerable<T> temp;
             using (var dr = InternalExecuteReader()) {

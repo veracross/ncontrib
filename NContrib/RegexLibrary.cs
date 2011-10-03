@@ -40,6 +40,11 @@
                 $";
         }
 
+        /// <summary>
+        /// A forgiving email address regex. Let email software handle real validation.
+        /// </summary>
+        public const string EmailAddress = @"(?i)\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b";
+
         public const string MimeType = @"(?ix)
             ^
             # List of known types and x-* customs
