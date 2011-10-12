@@ -1,4 +1,5 @@
 *.ReSharper.user
+/builds
 /NContrib/obj
 /NContrib/bin
 /NContrib.Tests/obj
