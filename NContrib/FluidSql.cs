@@ -232,6 +232,18 @@ namespace NContrib {
                 .ToLookup(o => o.Key, o => o.Value);
         }
 
+        public T[] ExecuteArray<T>() {
+            return ExecuteAndTransform(r => r.GetValue<T>(0)).ToArray();
+        }
+
+        public T[] ExecuteArray<T>(int keyCol) {
+            return ExecuteAndTransform(r => r.GetValue<T>(keyCol)).ToArray();
+        }
+
+        public T[] ExecuteArray<T>(string keyCol) {
+            return ExecuteAndTransform(r => r.GetValue<T>(keyCol)).ToArray();
+        }
+
         public IEnumerable<T> ExecuteAndTransform<T>(Converter<IDataReader, T> converter) {
             IEnumerable<T> temp;
             using (var dr = InternalExecuteReader()) {
