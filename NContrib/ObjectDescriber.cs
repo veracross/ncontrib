@@ -83,6 +83,9 @@ namespace NContrib {
                 .Select(p => new { p.Name, Value = p.GetValue(obj, null) })
                 .ToDictionary(p => p.Name, p => Describe(p.Value, nestLevel + 1));
 
+            if (props.Count() == 0)
+                return objectId;
+
             // figure out how much space the property names take up so we can pad them properly
             var padLen = props.Keys.Select(k => k.ToString()).Max(x => x.Length);
 
