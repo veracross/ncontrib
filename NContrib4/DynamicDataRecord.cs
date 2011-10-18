@@ -12,6 +12,7 @@ namespace NContrib4 {
         /// <summary>Turn the field names into standard format property names.</summary>
         /// <param name="s">field name</param>
         /// <example>field_name => FieldName</example>
+        /// <remarks>Field names ending in _xml and that begin with a &gt; are converted to <see cref="DynamicXElement"/></remarks>
         /// <returns></returns>
         private static string ToPropertyName(string s) {
             return System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(s).Replace("_", "");
@@ -19,7 +20,8 @@ namespace NContrib4 {
 
         public DynamicDataRecord(IDataRecord dr) {
             _fields = Enumerable.Range(0, dr.FieldCount)
-                .ToDictionary(i => ToPropertyName(dr.GetName(i)), dr.GetValue);
+                .Select(i => GetRecord(i, dr))
+                .ToDictionary(r => r.Key, r => r.Value);
         }
 
         public string[] GetFieldNames() {
@@ -44,6 +46,22 @@ namespace NContrib4 {
                 d[p.Key] = p.Value;
 
             return x;
+        }
+
+        protected static KeyValuePair<string, object> GetRecord(int i, IDataRecord dr) {
+
+            var value = dr.GetValue(i);
+            var name = dr.GetName(i);
+
+            const string autoXmlSuffix = "_xml";
+
+            if (name.EndsWith(autoXmlSuffix) && value.ToString().StartsWith("<")) {
+                name = name.Substring(0, name.Length - autoXmlSuffix.Length);
+                name = ToPropertyName(name);
+                return new KeyValuePair<string, object>(name, new DynamicXElement(value.ToString()));
+            }
+
+            return new KeyValuePair<string, object>(ToPropertyName(name), value);
         }
     }
 }
