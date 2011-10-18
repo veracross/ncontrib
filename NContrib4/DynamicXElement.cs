@@ -13,6 +13,12 @@ namespace NContrib4 {
 
         protected XElement ActualElement;
 
+        private string _indexAttribute = "id";
+        public string IndexAttribute {
+            get { return _indexAttribute; }
+            set { _indexAttribute = value; }
+        }
+
         public DynamicXElement() {
             ActualElement = null;
         }
@@ -30,12 +36,15 @@ namespace NContrib4 {
         }
 
         /// <summary>
-        /// Handler for fetching indexes. XML attributes are fetched from here
+        /// Handler for fetching indexes. This is implemented to fetch an element whose attribute
+        /// with name <see cref="IndexAttribute"/> matches this index value.
         /// </summary>
         /// <param name="binder"></param>
         /// <param name="indexes"></param>
         /// <param name="result"></param>
         /// <returns>String</returns>
+        /// <example>A list of elements called "items" with each "item" attribute having an attribute "id"
+        /// could be fetched like: Items["email"] to fetch an item with @id="email"</example>
         public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result) {
 
             if (ActualElement == null) {
@@ -43,11 +52,22 @@ namespace NContrib4 {
                 return true;
             }
 
-            var attributeName = indexes[0] as string;
-            var attribute = ActualElement.Attributes().FirstOrDefault(e => string.Compare(e.Name.LocalName, attributeName, true) == 0);
+            var requestedName = indexes[0] as string;
 
-            if (attribute != null) {
-                result = attribute.Value;
+            var element = ActualElement
+                .Elements()
+                .Where(n => n.HasAttributes)
+                .Where(n => n.Attribute(IndexAttribute) != null)
+                .Where(n => NameMatch(requestedName, n.Attribute(IndexAttribute).Value))
+                .ToArray();
+
+            if (element.Length == 0) {
+                result = new DynamicXElement();
+                return true;
+            }
+
+            if (element.Length == 1) {
+                result = new DynamicXElement(element.First());
                 return true;
             }
 
@@ -69,7 +89,7 @@ namespace NContrib4 {
                 return true;
             }
 
-            var elements = GetElements(ActualElement, binder.Name);
+            var elements = GetElements(ActualElement, binder.Name).ToArray();
             var elementCount = elements.Count();
 
             if (elementCount == 0) {
@@ -78,7 +98,12 @@ namespace NContrib4 {
             }
 
             if (elementCount == 1) {
-                result = new DynamicXElement(elements.First());
+                var e = elements.First();
+                
+                result = e.HasElements || e.HasAttributes
+                    ? new DynamicXElement(e)
+                    : (object)e.Value;
+
                 return true;
             }
 
@@ -94,7 +119,7 @@ namespace NContrib4 {
         /// <returns></returns>
         public T ValueOf<T>(string name, T fallback, CultureInfo cultureInfo) {
             if (ActualElement == null) return fallback;
-            var elements = GetElements(ActualElement, name);
+            var elements = GetElements(ActualElement, name).ToArray();
             return elements.Count() == 0 ? fallback : elements.First().Value.ConvertTo<T>(cultureInfo);
         }
 
@@ -118,42 +143,12 @@ namespace NContrib4 {
             return ValueOf(name, default(T), CultureInfo.CurrentCulture);
         }
 
-        /// <summary>
-        /// Converts the value of the current element to the type T with a fallback and specified culture info
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="fallback"></param>
-        /// <param name="cultureInfo"></param>
-        /// <returns></returns>
-        public T As<T>(T fallback, CultureInfo cultureInfo) {
-            return ActualElement == null ? fallback : ActualElement.Value.ConvertTo<T>(cultureInfo);
-        }
-
-        /// <summary>
-        /// Converts the value of the current element to the type T with a fallback and current culture info
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="fallback"></param>
-        /// <returns></returns>
-        public T As<T>(T fallback) {
-            return As(fallback, CultureInfo.CurrentCulture);
-        }
-
-        /// <summary>
-        /// Converst the value of the current element to type T using T's default as a fallback and current culture info
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public T As<T>() {
-            return As(default(T));
-        }
-
         /// <summary>Fetches elements with the given name using case-insensitive matching</summary>
         /// <param name="doc"></param>
         /// <param name="name"></param>
         /// <returns></returns>
         private static IEnumerable<XElement> GetElements(XContainer doc, string name) {
-            return doc.Elements().Where(e => string.Compare(e.Name.LocalName, name, true) == 0);
+            return doc.Elements().Where(e => NameMatch(name, e.Name.LocalName));
         }
 
         /// <summary>Converts a classic XmlNode to an XElement</summary>
@@ -164,6 +159,10 @@ namespace NContrib4 {
             using (var writer = doc.CreateWriter())
                 node.WriteTo(writer);
             return doc.Root;
+        }
+
+        public static bool NameMatch(string propertyName, string xmlName) {
+            return string.Compare(propertyName.ToSnakeCase(), xmlName, true) == 0;
         }
 
         /// <summary>
@@ -192,7 +191,14 @@ namespace NContrib4 {
         /// <summary>Return the current element's value when ToString() is requested</summary>
         /// <returns></returns>
         public override string ToString() {
-            return ActualElement == null ? base.ToString() : ActualElement.Value;
+
+            if (ActualElement == null)
+                return string.Empty;
+
+            if (ActualElement.HasAttributes || ActualElement.HasElements)
+                return ActualElement.ToString();
+
+            return ActualElement.Value;
         }
     }
 }
