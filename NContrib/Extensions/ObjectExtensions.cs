@@ -73,7 +73,7 @@ namespace NContrib.Extensions {
         /// <returns></returns>
         /// <exception cref="InvalidCastException"></exception>
         public static object ConvertTo(this object value, Type type, CultureInfo cultureInfo) {
-
+            
             // if the value is null, return a default instance for value types or null for non-value
             if (value == null)
                 return type.IsValueType ? Activator.CreateInstance(type) : null;
@@ -81,6 +81,12 @@ namespace NContrib.Extensions {
             // if the types are the same or value inherits from the type, we're done
             if (value.GetType() == type || type.IsAssignableFrom(value.GetType()))
                 return value;
+
+            // if we're going to a bool and the value is 1 or 0, assume true/false
+            if (type == typeof(bool)) {
+                if (value as string == "1") return true;
+                if (value as string == "0") return false;
+            }
 
             // if IConvertible is implemented, see if that can do it for us
             if (value is IConvertible) {
@@ -100,6 +106,7 @@ namespace NContrib.Extensions {
             if (type == typeof(string))
                 return value.ToString();
 
+            // use enum parser for enums
             if (type.IsEnum)
                 return Enum.Parse(type, value.ToString());
 
