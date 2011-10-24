@@ -60,7 +60,7 @@ namespace NContrib.Extensions {
         /// <returns></returns>
         public static IEnumerable<T> ExecuteAndTransform<T>(this IDbCommand cmd, Converter<IDataReader, T> converter) {
             using (var dr = cmd.ExecuteReader()) {
-                return dr.Transform(converter);
+                return dr.TransformAll(converter);
             }
         }
 

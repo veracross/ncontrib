@@ -247,7 +247,7 @@ namespace NContrib {
         public IEnumerable<T> ExecuteAndTransform<T>(Converter<IDataReader, T> converter) {
             IEnumerable<T> temp;
             using (var dr = InternalExecuteReader()) {
-                temp = dr.Transform(converter);
+                temp = dr.TransformAll(converter);
             }
             OnDataRead();
             return temp;
