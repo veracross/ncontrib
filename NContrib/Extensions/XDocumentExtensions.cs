@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -25,12 +23,26 @@ namespace NContrib.Extensions {
         /// <param name="root"></param>
         /// <param name="other"></param>
         public static void MergeTree(this XContainer root, XElement other) {
-            if (!root.Descendants().Any(x => x.Name == other.Name))
+            if (!root.Descendants().Any(x => ElementMatch(x, other)))
                 root.Add(other);
             else {
-                var e = root.Descendants().Single(x => x.Name == other.Name);
-                other.Descendants().Action(d => e.MergeTree(d));
+                var e = root.Descendants().Single(x => ElementMatch(x, other));
+                other.Descendants().Action(e.MergeTree);
             }
+        }
+
+        private static bool ElementMatch(XElement e1, XElement e2) {
+
+            if (e1.Name != e2.Name)
+                return false;
+
+            if (e1.HasAttributes != e2.HasAttributes)
+                return false;
+
+            if (e1.Attributes().Select(a => a.Name + a.Value).Join(",") != e2.Attributes().Select(a => a.Name + a.Value).Join(","))
+                return false;
+
+            return true;
         }
 
         /// <summary>

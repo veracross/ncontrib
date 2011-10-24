@@ -96,7 +96,7 @@ namespace NContrib4 {
                 result = new DynamicXElement();
                 return true;
             }
-
+            
             if (elementCount == 1) {
                 var e = elements.First();
                 
@@ -109,6 +109,11 @@ namespace NContrib4 {
 
             result = elements.Select(e => new DynamicXElement(e));
             return true;
+        }
+
+        public IEnumerable<dynamic> List(string path) {
+
+            return GetElements(ActualElement, path).Select(e => new DynamicXElement(e));
         }
 
         /// <summary>Converts the value of the requested element to the requested type T</summary>
