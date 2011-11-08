@@ -15,7 +15,7 @@ namespace NContrib.Extensions {
         /// <returns></returns>
         public static T ConvertTo<T>(this object value, CultureInfo cultureInfo) {
 
-            if (value == null)
+            if (value == null || value is DBNull)
                 return default(T);
 
             // if the types are the same or the value inherits from T, we're done
@@ -75,7 +75,7 @@ namespace NContrib.Extensions {
         public static object ConvertTo(this object value, Type type, CultureInfo cultureInfo) {
             
             // if the value is null, return a default instance for value types or null for non-value
-            if (value == null)
+            if (value == null || value is DBNull)
                 return type.IsValueType ? Activator.CreateInstance(type) : null;
             
             // if the types are the same or value inherits from the type, we're done
