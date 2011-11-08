@@ -342,6 +342,15 @@ namespace NContrib.Extensions {
         }
 
         /// <summary>
+        /// Uses <see cref="ToSnakeCase"/> and just replaces underscores with dashes
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string ToDashCase(this string s) {
+            return s.ToSnakeCase().Replace('_', '-');
+        }
+
+        /// <summary>
         /// Returns a string as its <see cref="Encoding.UTF8"/> byte representation, hex encoded
         /// </summary>
         /// <param name="s"></param>
