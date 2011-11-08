@@ -307,6 +307,18 @@ namespace NContrib.Extensions {
         }
 
         /// <summary>
+        /// Splits a string using the standard <see cref="String.Split(char[])"/> method,
+        /// then uses ConvertTo&lt;T&gt; on each item to make an array of the proper type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="s"></param>
+        /// <param name="separator"></param>
+        /// <returns></returns>
+        public static T[] Split<T>(this string s, params char[] separator) {
+            return s.IsBlank() ? new T[0] : s.Split(separator).Select(x => x.ConvertTo<T>()).ToArray();
+        }
+
+        /// <summary>
         /// Converts a string to camel case using spaces, dashes, and underscores as breaking points for a new capital letter
         /// </summary>
         /// <param name="s"></param>
