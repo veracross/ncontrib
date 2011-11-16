@@ -290,7 +290,7 @@ namespace NContrib {
         #region Internal Setup
         protected void PrepareCommand() {
             if (Parameters.Count > 0)
-                Parameters.ToList().ForEach(p => Command.Parameters.AddWithValue(p.Key, p.Value));
+                Parameters.ToList().ForEach(p => Command.Parameters.AddWithValue(p.Key, p.Value ?? DBNull.Value));
         }
 
         protected void CreateCommand(string commandText, CommandType commandType, object parameters = null) {
