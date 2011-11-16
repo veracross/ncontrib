@@ -14,7 +14,7 @@ namespace NContrib.Extensions {
         /// <param name="chars"></param>
         /// <returns></returns>
         public static bool ContainsOnly(this string input, params char[] chars) {
-            return input.ToCharArray().All(c => chars.Contains(c));
+            return input.ToCharArray().All(chars.Contains);
         }
 
         /// <summary>Gets a digit inside of the string at a specified index.</summary>
@@ -90,9 +90,12 @@ namespace NContrib.Extensions {
         /// <param name="delimiter"></param>
         /// <returns>String.Empty if the sequence contains no elements</returns>
         public static string Join(this IEnumerable<string> strings, string delimiter) {
-            return strings.Any()
-                ? string.Join(delimiter, strings as string[] ?? strings.ToArray())
-                : string.Empty;
+
+            var arr = strings.ToArray();
+
+            return arr.Length > 0
+                ? string.Join(delimiter, arr)
+                : null;
         }
 
         /// <summary>
@@ -114,10 +117,12 @@ namespace NContrib.Extensions {
         /// <param name="lastDelimiter"></param>
         /// <returns></returns>
         public static string Join(this IEnumerable<string> strings, string delimiter, string lastDelimiter) {
-            return strings.Any()
-                ? string.Join(delimiter, strings as string[] ?? strings.ToArray(), 0, strings.Count() - 1)
-                    + lastDelimiter + strings.ElementAt(strings.Count() - 1)
-                : string.Empty;
+
+            var arr = strings.ToArray();
+
+            return arr.Length > 0
+                ? string.Join(delimiter, arr, 0, arr.Length - 1) + lastDelimiter + arr.ElementAt(arr.Length - 1)
+                : null;
         }
 
         /// <summary>
@@ -185,7 +190,7 @@ namespace NContrib.Extensions {
         /// <param name="input"></param>
         /// <returns></returns>
         public static bool IsBlank(this string input) {
-            return String.IsNullOrEmpty(input) || input.ToCharArray().All(c => char.IsWhiteSpace(c));
+            return String.IsNullOrEmpty(input) || input.ToCharArray().All(char.IsWhiteSpace);
         }
 
         /// <summary>Tests to find if the string is not null, not empty (zero-length), and contains more than whitespace</summary>
