@@ -167,7 +167,7 @@ namespace NContrib4 {
         }
 
         public static bool NameMatch(string propertyName, string xmlName) {
-            return string.Compare(propertyName.ToSnakeCase(), xmlName, true) == 0;
+            return string.Compare(propertyName, xmlName, true) == 0 || string.Compare(propertyName.ToSnakeCase(), xmlName, true) == 0;
         }
 
         /// <summary>
