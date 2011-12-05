@@ -75,6 +75,8 @@ namespace NContrib {
 
         protected SqlParameter ReturnValueParameter { get; set; }
 
+        protected IList<SqlParameter> OutputParameters { get; set; }
+
         protected List<FluidSqlEventHandler<SqlException>> ErrorHandlers = new List<FluidSqlEventHandler<SqlException>>();
 
         protected List<FluidSqlEventHandler<SqlInfoMessageEventArgs>> InfoHandlers = new List<FluidSqlEventHandler<SqlInfoMessageEventArgs>>();
@@ -85,6 +87,7 @@ namespace NContrib {
             : this(new SqlConnection(connectionString)) {
 
             AutoClose = autoClose;
+            OutputParameters = new List<SqlParameter>();
         }
 
         public FluidSql(SqlConnection connection) {
@@ -127,6 +130,16 @@ namespace NContrib {
         public FluidSql AddParameters(IDictionary<string, object> parameters) {
             parameters.ToList().ForEach(p => AddParameter(p.Key, p.Value));
             return this;
+        }
+
+        public FluidSql AddOutputParameter(string name, SqlDbType type) {
+
+            OutputParameters.Add(new SqlParameter(name, type, -1) {Direction = ParameterDirection.Output});
+            return this;
+        }
+
+        public T GetOutputParameter<T>(string name) {
+            return OutputParameters.Single(p => p.ParameterName == name).Value.ConvertTo<T>();
         }
 
         public T GetReturnValue<T>() {
@@ -172,7 +185,12 @@ namespace NContrib {
         #endregion
 
         #region Public execution
-        public int ExecuteNonQuery() {
+        public FluidSql ExecuteNonQuery() {
+            InternalExecuteNonQuery();
+            return this;
+        }
+
+        public int ExecuteRecordsAffected() {
             return InternalExecuteNonQuery();
         }
 
@@ -289,8 +307,12 @@ namespace NContrib {
 
         #region Internal Setup
         protected void PrepareCommand() {
+
             if (Parameters.Count > 0)
                 Parameters.ToList().ForEach(p => Command.Parameters.AddWithValue(p.Key, p.Value ?? DBNull.Value));
+
+            if (OutputParameters.Count > 0)
+                AddOutputParameters();
         }
 
         protected void CreateCommand(string commandText, CommandType commandType, object parameters = null) {
@@ -302,14 +324,12 @@ namespace NContrib {
         }
 
         protected void AddReturnValueParameter() {
-            if (Command == null)
-                throw new Exception("Command has not been initialized");
-
-            if (Command.CommandType != CommandType.StoredProcedure)
-                throw new Exception("Return values are only supported on procedures");
-
             ReturnValueParameter = Command.Parameters.Add("@RETURN_VALUE", SqlDbType.Variant);
             ReturnValueParameter.Direction = ParameterDirection.ReturnValue;
+        }
+
+        protected void AddOutputParameters() {
+            OutputParameters.Action(p => Command.Parameters.Add(p));
         }
         #endregion
 
