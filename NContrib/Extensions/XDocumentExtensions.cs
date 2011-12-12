@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,27 +23,14 @@ namespace NContrib.Extensions {
             return e == null ? fallback : e.Value;
         }
 
-        /// <summary>
-        /// As long as it's legal, will merge XML trees
-        /// </summary>
-        /// <param name="root"></param>
-        /// <param name="other"></param>
-        public static void MergeTree(this XContainer root, XElement other) {
-
-            if (!root.Descendants().Any(x => x.DescribePath() == other.DescribePath()))
-                root.Add(other);
+        public static void AddFragment(this XElement target, XElement other) {
+            
+            if (!target.Elements().Any(e => e.DescribeSelector() == other.DescribeSelector())) {
+                target.Add(other);
+            }
             else {
-                var matches = root.Descendants().Where(x => x.DescribePath() == other.DescribePath()).ToArray();
-                var desc = other.DescribePath();
+                target.Elements().Single(e => e.DescribeSelector() == other.DescribeSelector()).AddFragment(other.Elements().First());
 
-                if (matches.Length == 0)
-                    throw new XmlException("No matches were found for " + desc + " which is quite unexpected.");
-
-                if (matches.Length > 1)
-                    throw new InvalidOperationException("More than one element match was found for " + desc);
-
-                var e = matches.Single();
-                other.Descendants().Action(e.MergeTree);
             }
         }
 
