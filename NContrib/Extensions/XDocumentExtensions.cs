@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -17,32 +19,50 @@ namespace NContrib.Extensions {
             return XDocument.Load(doc.ToXmlReader());
         }
 
+        public static string GetValue(this XElement node, string name, string fallback = null) {
+            var e = node.Elements().SingleOrDefault(el => el.Name.Namespace == node.Name.Namespace && el.Name.LocalName == name);
+            return e == null ? fallback : e.Value;
+        }
+
         /// <summary>
         /// As long as it's legal, will merge XML trees
         /// </summary>
         /// <param name="root"></param>
         /// <param name="other"></param>
         public static void MergeTree(this XContainer root, XElement other) {
-            if (!root.Descendants().Any(x => ElementMatch(x, other)))
+
+            if (!root.Descendants().Any(x => x.DescribePath() == other.DescribePath()))
                 root.Add(other);
             else {
-                var e = root.Descendants().Single(x => ElementMatch(x, other));
+                var matches = root.Descendants().Where(x => x.DescribePath() == other.DescribePath()).ToArray();
+                var desc = other.DescribePath();
+
+                if (matches.Length == 0)
+                    throw new XmlException("No matches were found for " + desc + " which is quite unexpected.");
+
+                if (matches.Length > 1)
+                    throw new InvalidOperationException("More than one element match was found for " + desc);
+
+                var e = matches.Single();
                 other.Descendants().Action(e.MergeTree);
             }
         }
 
-        private static bool ElementMatch(XElement e1, XElement e2) {
+        public static string DescribePath(this XElement e) {
+            var up = e.Ancestors().Reverse().Select(a => a.DescribeSelector()).Join("/");
+            var me = (up.IsBlank() ? "" : up + "/") + e.DescribeSelector();
+            return me;
+        }
 
-            if (e1.Name != e2.Name)
-                return false;
+        public static string DescribeSelector(this XElement e) {
+            var me = e.Name.ToString();
+            if (e.HasAttributes)
+                me += "[" + e.Attributes().Describe() + "]";
+            return me;
+        }
 
-            if (e1.HasAttributes != e2.HasAttributes)
-                return false;
-
-            if (e1.Attributes().Select(a => a.Name + a.Value).Join(",") != e2.Attributes().Select(a => a.Name + a.Value).Join(","))
-                return false;
-
-            return true;
+        public static string Describe(this IEnumerable<XAttribute> attributes) {
+            return attributes.Select(a => string.Format("@{0}=\"{1}\"", a.Name, a.Value)).Join(",");
         }
 
         /// <summary>
