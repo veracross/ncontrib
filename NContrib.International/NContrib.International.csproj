@@ -42,6 +42,8 @@
   <ItemGroup>
     <Compile Include="Country.cs" />
     <Compile Include="CountryCollection.cs" />
+    <Compile Include="CountrySubdivision.cs" />
+    <Compile Include="CountrySubdivisionCollection.cs" />
     <Compile Include="Currency.cs" />
     <Compile Include="CurrencyCollection.cs" />
     <Compile Include="Enums.cs" />

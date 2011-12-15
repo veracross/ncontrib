@@ -1,9 +1,50 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NContrib.International {
 
     [Serializable]
     public class Country {
+        
+        /// <summary>ISO 3166-1 numeric</summary>
+        public int CodeNumeric { get; private set; }
+
+        /// <summary>ISO 3166-1 alpha-3</summary>
+        /// <example>SWE for Sweden</example>
+        public string CodeAlpha3 { get; private set; }
+
+        /// <summary>ISO 3166-1 alpha-2</summary>
+        /// <example>SE for Sweden</example>
+        public string CodeAlpha2 { get; private set; }
+
+        public string EnglishName { get; private set; }
+
+        public Country(int numeric, string twoChar, string threeChar, string name) {
+            CodeNumeric = numeric;
+            CodeAlpha3 = threeChar;
+            CodeAlpha2 = twoChar;
+            EnglishName = name;
+        }
+
+        public static implicit operator Country(string abbr) {
+            return Countries[abbr];
+        }
+
+        public static Country GetById(string id) {
+            return Countries[id];
+        }
+
+        public static Country GetById(int id) {
+            return Countries[id];
+        }
+
+        public override string ToString() {
+            return EnglishName;
+        }
+
+        public IEnumerable<CountrySubdivision> Subdivisions {
+            get { return CountrySubdivision.CountrySubdivisions.ForCountry(this); }
+        }
 
         public static CountryCollection Countries = new CountryCollection {
             { 4, "AF", "AFG", "Afghanistan" },
@@ -33,6 +74,7 @@ namespace NContrib.International {
             { 60, "BM", "BMU", "Bermuda" },
             { 64, "BT", "BTN", "Bhutan" },
             { 68, "BO", "BOL", "Bolivia, Plurinational State of" },
+            { 535, "BQ", "BES", "Bonaire, Sint Eustatius and Saba" },
             { 70, "BA", "BIH", "Bosnia and Herzegovina" },
             { 72, "BW", "BWA", "Botswana" },
             { 74, "BV", "BVT", "Bouvet Island" },
@@ -62,6 +104,7 @@ namespace NContrib.International {
             { 384, "CI", "CIV", "Côte d'Ivoire" },
             { 191, "HR", "HRV", "Croatia" },
             { 192, "CU", "CUB", "Cuba" },
+            { 532, "CW", "CUW", "Curaçao" },
             { 196, "CY", "CYP", "Cyprus" },
             { 203, "CZ", "CZE", "Czech Republic" },
             { 208, "DK", "DNK", "Denmark" },
@@ -130,7 +173,7 @@ namespace NContrib.International {
             { 422, "LB", "LBN", "Lebanon" },
             { 426, "LS", "LSO", "Lesotho" },
             { 430, "LR", "LBR", "Liberia" },
-            { 434, "LY", "LBY", "Libyan Arab Jamahiriya" },
+            { 434, "LY", "LBY", "Libya" },
             { 438, "LI", "LIE", "Liechtenstein" },
             { 440, "LT", "LTU", "Lithuania" },
             { 442, "LU", "LUX", "Luxembourg" },
@@ -190,7 +233,7 @@ namespace NContrib.International {
             { 643, "RU", "RUS", "Russian Federation" },
             { 646, "RW", "RWA", "Rwanda" },
             { 652, "BL", "BLM", "Saint Barthélemy" },
-            { 654, "SH", "SHN", "Saint Helena" },
+            { 654, "SH", "SHN", "Saint Helena, Ascension, and Tristan da Cunha" },
             { 659, "KN", "KNA", "Saint Kitts and Nevis" },
             { 662, "LC", "LCA", "Saint Lucia" },
             { 663, "MF", "MAF", "Saint Martin (French part)" },
@@ -205,15 +248,17 @@ namespace NContrib.International {
             { 690, "SC", "SYC", "Seychelles" },
             { 694, "SL", "SLE", "Sierra Leone" },
             { 702, "SG", "SGP", "Singapore" },
+            { 534, "SX", "SXM", "Sint Maarten (Dutch part)" },
             { 703, "SK", "SVK", "Slovakia" },
             { 705, "SI", "SVN", "Slovenia" },
             { 90, "SB", "SLB", "Solomon Islands" },
             { 706, "SO", "SOM", "Somalia" },
             { 710, "ZA", "ZAF", "South Africa" },
             { 239, "GS", "SGS", "South Georgia and the South Sandwich Islands" },
+            { 728, "SS", "SSD", "South Sudan"},
             { 724, "ES", "ESP", "Spain" },
             { 144, "LK", "LKA", "Sri Lanka" },
-            { 736, "SD", "SDN", "Sudan" },
+            { 729, "SD", "SDN", "Sudan" },
             { 740, "SR", "SUR", "Suriname" },
             { 744, "SJ", "SJM", "Svalbard and Jan Mayen" },
             { 748, "SZ", "SWZ", "Swaziland" },
@@ -253,41 +298,5 @@ namespace NContrib.International {
             { 894, "ZM", "ZMB", "Zambia" },
             { 716, "ZW", "ZWE", "Zimbabwe" },
         };
-        
-        /// <summary>ISO 3166-1 numeric</summary>
-        public int CodeNumeric { get; private set; }
-
-        /// <summary>ISO 3166-1 alpha-3</summary>
-        /// <example>SWE for Sweden</example>
-        public string CodeAlpha3 { get; private set; }
-
-        /// <summary>ISO 3166-1 alpha-2</summary>
-        /// <example>SE for Sweden</example>
-        public string CodeAlpha2 { get; private set; }
-
-        public string EnglishName { get; private set; }
-
-        public Country(int numeric, string twoChar, string threeChar, string name) {
-            CodeNumeric = numeric;
-            CodeAlpha3 = threeChar;
-            CodeAlpha2 = twoChar;
-            EnglishName = name;
-        }
-
-        public static implicit operator Country(string abbr) {
-            return Countries[abbr];
-        }
-
-        public static Country GetById(string id) {
-            return Countries[id];
-        }
-
-        public static Country GetById(int id) {
-            return Countries[id];
-        }
-
-        public override string ToString() {
-            return EnglishName;
-        }
     }
 }
