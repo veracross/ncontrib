@@ -109,6 +109,12 @@ namespace NContrib {
             return this;
         }
 
+        public FluidSql ChangeDatabase(string db) {
+            OpenConnection();
+            Connection.ChangeDatabase(db);
+            return this;
+        }
+
         public FluidSql ExecutedHandler(EventHandler<CommandExecutedEventArgs> handler) {
             Executed += handler;
             return this;
@@ -369,6 +375,23 @@ namespace NContrib {
 
             return default(T);
         }
+
+        protected void OpenConnection() {
+
+            if (Connection.State == ConnectionState.Open)
+                return;
+
+            try {
+                Connection.Open();
+            }
+            catch (SqlException ex) {
+                if (ErrorHandlers.Count == 0)
+                    throw ex;
+
+                foreach (var h in ErrorHandlers)
+                    h.Handler(this, ex);
+            }
+        }
         #endregion
 
         #region Internal Events
@@ -382,19 +405,7 @@ namespace NContrib {
                 InfoHandlers.ToList()
                     .ForEach(h => Connection.InfoMessage += (sender, e) => h.Handler(this, e));
 
-            if (Connection.State != ConnectionState.Open) {
-                try {
-                    Connection.Open();
-                }
-                catch (SqlException ex) {
-                    if (ErrorHandlers.Count == 0)
-                        throw ex;
-
-                    foreach (var h in ErrorHandlers)
-                        h.Handler(this, ex);
-                }
-            }
-
+            OpenConnection();
             PrepareCommand();
         }
 
