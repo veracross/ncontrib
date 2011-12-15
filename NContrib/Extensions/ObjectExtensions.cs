@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Xml;
 
 namespace NContrib.Extensions {
 
@@ -204,6 +207,20 @@ namespace NContrib.Extensions {
         /// <returns></returns>
         public static bool NotIn<T1, T2>(this T1 value, IEqualityComparer<T2> comparer, params T2[] collection) where T1 : T2 {
             return !collection.Contains(value, comparer);
+        }
+
+        /// <summary>
+        /// Serializes an object to a formatted XML string
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="formatting"></param>
+        /// <returns></returns>
+        public static string SerializeToXml(this object o, Formatting formatting = Formatting.Indented) {
+            using (var sw = new StringWriter())
+            using (var tw = new XmlTextWriter(sw) { Formatting = formatting }) {
+                new System.Xml.Serialization.XmlSerializer(o.GetType()).Serialize(tw, o);
+                return sw.ToString();
+            }
         }
 
         /// <summary>
