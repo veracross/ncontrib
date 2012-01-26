@@ -166,6 +166,11 @@ namespace NContrib {
             return this;
         }
 
+        public FluidSql CreateInsertCommand(string table, object fields) {
+
+            return CreateInsertCommand(table, ObjectToFieldDictionary(fields));
+        }
+
         public FluidSql CreateInsertCommand(string table, IDictionary<string, object> fields) {
 
             var sql = "insert into " + table +
@@ -176,6 +181,11 @@ namespace NContrib {
             AddParameters(fields);
 
             return this;
+        }
+
+        public FluidSql CreateUpdateCommand(string table, object fields, string where) {
+            
+            return CreateUpdateCommand(table, ObjectToFieldDictionary(fields), where);
         }
 
         public FluidSql CreateUpdateCommand(string table, IDictionary<string, object> fields, string where) {
@@ -189,6 +199,13 @@ namespace NContrib {
         }
 
         #endregion
+
+        protected static IDictionary<string, object> ObjectToFieldDictionary(object o) {
+
+            return o.GetType()
+                .GetProperties()
+                .ToDictionary(p => p.Name.ToSnakeCase(), p => p.GetValue(o, null));
+        }
 
         #region Public execution
         public FluidSql ExecuteNonQuery() {

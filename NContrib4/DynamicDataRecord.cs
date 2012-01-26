@@ -56,6 +56,7 @@ namespace NContrib4 {
 
             const string autoXmlSuffix = "_xml";
 
+            // turn xml fields into DynamicXElement
             if (name.EndsWith(autoXmlSuffix) && value.ToString().StartsWith("<")) {
                 name = name.Substring(0, name.Length - autoXmlSuffix.Length);
                 return new KeyValuePair<string, object>(name, new DynamicXElement(value.ToString()));
