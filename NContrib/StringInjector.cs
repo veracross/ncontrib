@@ -114,7 +114,7 @@ namespace NContrib {
             //regex replacement of key with value, where the generic key format is:
             //Regex foo = new Regex("{(foo)(?:}|(?::(.[^}]*)}))");
             //for key = foo, matches {foo} and {foo:SomeFormat}
-            var attributeRegex = new Regex(@"{(?<key>" + key + @")(?:}|(?::(?<format>.[^}]*)}))");
+            var attributeRegex = new Regex(@"{(?<key>" + key + @")(?:}|(?::(?<format>.[^}]*)}))", RegexOptions.IgnoreCase);
 
             //loop through matches, since each key may be used more than once (and with a different format string)
             foreach (Match m in attributeRegex.Matches(formatString)) {
