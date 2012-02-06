@@ -231,11 +231,11 @@ namespace NContrib {
             return InternalExecuteScalar().ConvertTo<T>();
         }
 
-        public IEnumerable<IDictionary<string, object>> ExecuteDictionaries(Func<string, string> fieldNameConverter = null) {
+        public List<IDictionary<string, object>> ExecuteDictionaries(Func<string, string> fieldNameConverter = null) {
             return ExecuteDictionaries<object>(fieldNameConverter);
         }
 
-        public IEnumerable<IDictionary<string, TValue>> ExecuteDictionaries<TValue>(Func<string, string> fieldNameConverter = null) {
+        public List<IDictionary<string, TValue>> ExecuteDictionaries<TValue>(Func<string, string> fieldNameConverter = null) {
             var temp = ExecuteAndTransform(dr => dr.GetRowAsDictionary<TValue>(fieldNameConverter));
             OnDataRead();
             return temp;
@@ -285,8 +285,8 @@ namespace NContrib {
             return ExecuteAndTransform(r => r.GetValue<T>(keyCol)).ToArray();
         }
 
-        public IEnumerable<T> ExecuteAndTransform<T>(Converter<IDataReader, T> converter) {
-            IEnumerable<T> temp;
+        public List<T> ExecuteAndTransform<T>(Converter<IDataReader, T> converter) {
+            List<T> temp;
             using (var dr = InternalExecuteReader()) {
                 temp = dr.TransformAll(converter);
             }

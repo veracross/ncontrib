@@ -102,7 +102,7 @@ namespace NContrib.Extensions {
         /// <param name="dr"></param>
         /// <param name="converter"></param>
         /// <returns></returns>
-        public static IEnumerable<T> TransformAll<T>(this IDataReader dr, Converter<IDataReader, T> converter) {
+        public static List<T> TransformAll<T>(this IDataReader dr, Converter<IDataReader, T> converter) {
             var temp = new List<T>();
 
             while (dr.Read())

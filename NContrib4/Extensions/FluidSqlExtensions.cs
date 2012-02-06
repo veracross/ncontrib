@@ -5,9 +5,9 @@ namespace NContrib4.Extensions {
 
     public static class FluidSqlExtensions {
 
-        public static IEnumerable<dynamic> ExecuteDynamic(this FluidSql fs) {
+        public static List<dynamic> ExecuteDynamic(this FluidSql fs) {
 
-            return fs.ExecuteAndTransform(dr => new DynamicDataRecord(dr));
+            return fs.ExecuteAndTransform(dr => (dynamic) new DynamicDataRecord(dr));
 
         }
     }
