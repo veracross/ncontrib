@@ -64,6 +64,10 @@ namespace NContrib.Extensions {
             return index == -1 ? s : s.Substring(offset, s.Length - offset);
         }
 
+        public static string Indent(this string s, int count, string indentStr = " ") {
+            return Regex.Replace(s, @"(?m)^", indentStr.Repeat(count));
+        }
+
         /// <summary>Indicates if every character in this string is a digit using <see cref="Char.IsDigit(char)"/></summary>
         /// <param name="input"></param>
         /// <returns></returns>

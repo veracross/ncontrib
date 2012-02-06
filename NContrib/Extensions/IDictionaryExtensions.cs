@@ -23,7 +23,7 @@ namespace NContrib.Extensions {
                 return "(empty)";
 
             var padLen = dict.Keys.Select(k => k.ToString()).Max(x => x.Length);
-            return dict.Select(x => x.Key.ToString().PadRight(padLen) + " => " + x.Value).Join("\n");
+            return dict.Select(x => x.Key.ToString().PadRight(padLen) + " => " + x.Value.Describe().Indent(4)).Join("\n");
         }
 
         public static TValue GetValue<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key) {

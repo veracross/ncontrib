@@ -64,8 +64,10 @@ namespace NContrib {
             if (type.IsValueType)
                 return obj.ToString();
 
-            if (type.IsArray)
-                return Describe(((object[])obj));
+            if (type.IsArray) {
+                var temp = (Array) obj;
+                return Describe(temp.Cast<object>());
+            }
 
             var describer = type.GetMethod("Describe");
 
@@ -83,7 +85,7 @@ namespace NContrib {
                 .Select(p => new { p.Name, Value = p.GetValue(obj, null) })
                 .ToDictionary(p => p.Name, p => Describe(p.Value, nestLevel + 1));
 
-            if (props.Count() == 0)
+            if (!props.Any())
                 return objectId;
 
             // figure out how much space the property names take up so we can pad them properly
@@ -98,12 +100,10 @@ namespace NContrib {
             return objectId + "\n" + (nestLevel > 0 ? spacer : "") + formatted.Join("\n" + spacer);
         }
 
-        public static string Describe<T>(T[] source) {
+        public static string Describe<T>(IEnumerable<T> source) {
+
             if (source == null)
                 return "(null)";
-
-            if (source.Length == 0)
-                return "(empty)";
 
             return "[" + source.Select(x => x.ToString()).Join(", ") + "]";
         }
