@@ -6,6 +6,31 @@ namespace NContrib.Extensions {
     public static class StreamExtensions {
 
         /// <summary>
+        /// Use MIME magic to find the MIME type for this stream.
+        /// </summary>
+        /// <remarks>
+        /// 256 bytes (or the total number of bytes in the stream if 256 are not available)
+        /// are read from the current stream location to detect the MIME type.
+        /// If the stream support seeking, the stream position will be moved back after
+        /// the sample is taken.
+        /// </remarks>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static string GetMime(this Stream stream) {
+
+            var buffer = new byte[ByteExtensions.MimeSampleSize];
+
+            var readLength = stream.Length >= buffer.Length ? buffer.Length: (int)stream.Length;
+
+            stream.Read(buffer, 0, readLength);
+
+            if (stream.CanSeek)
+                stream.Seek(readLength * -1, SeekOrigin.Current);
+
+            return buffer.GetMime();
+        }
+
+        /// <summary>
         /// Reads the entire contents of a stream into a byte array
         /// </summary>
         /// <seealso>http://www.yoda.arachsys.com/csharp/readbinary.html</seealso>
@@ -35,7 +60,7 @@ namespace NContrib.Extensions {
                 if (nextByte == -1)
                     return buffer;
 
-                // not done. resize teh buffer, add the byte we read, carry on
+                // not done. resize the buffer, add the byte we read, carry on
                 var newBuffer = new byte[buffer.Length * 2];
                 Array.Copy(buffer, newBuffer, buffer.Length);
                 newBuffer[read] = (byte) nextByte;
