@@ -7,10 +7,25 @@ namespace NContrib.Extensions {
 
     public static class NameValueCollectionExtensions {
 
+        /// <summary>
+        /// Determines if the given key is present in the <see cref="NameValueCollection"/>
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public static bool ContainsKey(this NameValueCollection collection, string key) {
             return collection.AllKeys.Any(k => k == key);
         }
 
+        /// <summary>
+        /// If the <see cref="NameValueCollection"/> contains the given key, the value is converted
+        /// to <see cref="T"/> and returned. If it's not present, the fallback value is returned
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="collection"></param>
+        /// <param name="key"></param>
+        /// <param name="fallback"></param>
+        /// <returns></returns>
         public static T GetValue<T>(this NameValueCollection collection, string key, T fallback = default(T)) {
             return collection.ContainsKey(key) ? collection[key].ConvertTo<T>() : fallback;
         }
