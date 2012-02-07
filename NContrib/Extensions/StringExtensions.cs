@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
+using System.Xml;
 using NContrib.Culture;
 
 namespace NContrib.Extensions {
@@ -109,7 +111,7 @@ namespace NContrib.Extensions {
         /// <param name="delimiter"></param>
         /// <returns>string.Empty if the sequence contains no elements</returns>
         public static string Join(this IEnumerable<string> strings, char delimiter) {
-            return strings.Join(delimiter.ToString());
+            return strings.Join(new String(delimiter, 1));
         }
 
         /// <summary>
@@ -245,6 +247,12 @@ namespace NContrib.Extensions {
         /// <returns></returns>
         public static Dictionary<string, string> ParseDictionary(this string input, string pairSeparator, string keyValueSeparator) {
             return input.ParseDictionary(pairSeparator, keyValueSeparator, EqualityComparer<string>.Default);
+        }
+
+        public static XmlDocument ParseXmlDocument(this string s) {
+            var doc = new XmlDocument();
+            doc.LoadXml(s);
+            return doc;
         }
 
         /// <summary>
@@ -516,6 +524,25 @@ namespace NContrib.Extensions {
             var offset = m.Index + (includeSearchString ? m.Value.Length : 0);
             
             return s.Substring(0, offset);
+        }
+
+        /// <summary>
+        /// URL-encodes the string using UTF8
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string UrlEncode(this string s) {
+            return s.UrlEncode(Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// URL-encodes the string using the given <see cref="Encoding"/>
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="enc"></param>
+        /// <returns></returns>
+        public static string UrlEncode(this string s, Encoding enc) {
+            return HttpUtility.UrlEncode(s, enc);
         }
 
         /// <summary>
