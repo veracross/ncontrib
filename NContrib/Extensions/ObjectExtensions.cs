@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml;
 
 namespace NContrib.Extensions {
@@ -248,6 +247,37 @@ namespace NContrib.Extensions {
         public static void SetDefaults(this object o, object defaults) {
             o.SetDefaults();
             o.CopyPropertiesFrom(defaults);
+        }
+
+        /// <summary>
+        /// Attempts to convert the object to type T. If successful, assigns the value using the given assigner
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="o"></param>
+        /// <param name="assign"></param>
+        /// <returns></returns>
+        public static bool TryConvertTo<T>(this object o, Action<T> assign) {
+            return o.TryConvertTo(thisObject => thisObject.ConvertTo<T>(), assign);
+        }
+
+        /// <summary>
+        /// Attemtps to convert the object to type T using the given converter. If successful, the value
+        /// is assisgned using the given assigner.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="o"></param>
+        /// <param name="converter"></param>
+        /// <param name="assign"></param>
+        /// <returns></returns>
+        public static bool TryConvertTo<T>(this object o, Converter<object, T> converter, Action<T> assign) {
+            
+            try {
+                assign(converter(o));
+                return true;
+            }
+            catch(Exception) {
+                return false;
+            }
         }
     }
 }
