@@ -6,6 +6,15 @@ using System.Linq;
 namespace NContrib.Extensions {
 
     public static class NameValueCollectionExtensions {
+
+        public static bool ContainsKey(this NameValueCollection collection, string key) {
+            return collection.AllKeys.Any(k => k == key);
+        }
+
+        public static T GetValue<T>(this NameValueCollection collection, string key, T fallback = default(T)) {
+            return collection.ContainsKey(key) ? collection[key].ConvertTo<T>() : fallback;
+        }
+
         /// <summary>
         /// Converts a NameValueCollection into a Dictionary&lt;string,string&gt;
         /// using a <see cref="StringComparer.InvariantCultureIgnoreCase"/> equality comparer.
