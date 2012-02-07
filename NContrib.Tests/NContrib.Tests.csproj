@@ -37,6 +37,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -45,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Drawing\ImageTypeHelperTests.cs" />
     <Compile Include="FluidSqlTests.cs" />
     <Compile Include="International\CountryTests.cs" />
     <Compile Include="International\CurrencyTests.cs" />
@@ -85,6 +87,10 @@
     <Content Include="lib\nunit.framework.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NContrib.Drawing\NContrib.Drawing.csproj">
+      <Project>{0A962129-1F9E-447C-91D6-E5B5CC2E2077}</Project>
+      <Name>NContrib.Drawing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NContrib.International\NContrib.International.csproj">
       <Project>{9C062AEC-B6F7-4612-BF5B-13EC4C3D266F}</Project>
       <Name>NContrib.International</Name>
