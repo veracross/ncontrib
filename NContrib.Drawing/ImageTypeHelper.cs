@@ -31,7 +31,8 @@ namespace NContrib.Drawing {
                 { "image/x-png", "image/png" },
             };
 
-            irregular.TryGetValue(mimeType, out mimeType);
+            if (irregular.ContainsKey(mimeType))
+                mimeType = irregular[mimeType];
 
             var encoders = ImageCodecInfo.GetImageEncoders().Where(ic => ic.MimeType == mimeType).ToArray();
 

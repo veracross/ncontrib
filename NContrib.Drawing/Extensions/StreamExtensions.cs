@@ -4,57 +4,78 @@ using System.Drawing.Imaging;
 using System.IO;
 using NContrib.Extensions;
 
-namespace NContrib.Drawing {
+namespace NContrib.Drawing.Extensions {
 
-    public static class ImageSizeHelper {
-
-        /// <summary>
-        /// Tries to use the GNV fast image size checkers for JPEG, GIF, PNG, and BMP
-        /// Uses .NET newing-up an Image object as a fallback
-        /// </summary>
-        /// <param name="imagePath"></param>
-        /// <returns></returns>
-        public static Size GetImageSize(string imagePath) {
-            using (var reader = File.OpenRead(imagePath))
-                return GetImageSize(reader);
-        }
+    public static class StreamExtensions {
 
         /// <summary>
         /// Tries to use the GNV fast image size checkers for JPEG, GIF, PNG, and BMP
         /// Uses .NET newing-up an Image object as a fallback
         /// </summary>
-        /// <param name="stream"></param>
+        /// <param name="s"></param>
         /// <returns></returns>
-        public static Size GetImageSize(Stream stream) {
+        /// <exception cref="InvalidDataException"></exception>
+        public static Size GetImageSize(this Stream s) {
 
-            var mimeType = stream.GetMimeFromBytes();
-            var imageFormat = ImageTypeHelper.GetImageFormatFromMimeType(mimeType);
+            var mime = s.GetMime();
+
+            if (mime.IsEmpty() || mime == "application/octet-stream")
+                throw new InvalidDataException("Invalid or undetectable image format");
+
+            var imageFormat = ImageTypeHelper.GetImageFormatFromMimeType(mime);
+
+            if (imageFormat == null)
+                throw new InvalidDataException("Could not detect image format from mime type: " + mime);
 
             if (imageFormat.Guid == ImageFormat.Jpeg.Guid)
-                return GetJpegImageSize(stream);
+                return s.GetJpegImageSize();
 
             if (imageFormat.Guid == ImageFormat.Gif.Guid)
-                return GetGifImageSize(stream);
+                return s.GetGifImageSize();
 
             if (imageFormat.Guid == ImageFormat.Png.Guid)
-                return GetPngImageSize(stream);
+                return s.GetPngImageSize();
 
             if (imageFormat.Guid == ImageFormat.Bmp.Guid)
-                return GetBmpImageSize(stream);
+                return s.GetBmpImageSize();
 
-            using (var img = Image.FromStream(stream)) {
+            using (var img = Image.FromStream(s)) {
                 return img.Size;
             }
         }
 
-        #region Image Size Getters by Type
+        /// <summary>
+        /// Reads the size of a PNG image from this stream at the current offset
+        /// Rewinds the stream to where it started when finished
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static Size GetPngImageSize(this Stream stream) {
+
+            if (!ImageTypeHelper.IsPng(stream))
+                throw new InvalidDataException("This is not a PNG stream");
+
+            var br = new BinaryReader(stream);
+            var position = br.BaseStream.Position;
+
+            // jump over the 8 byte signature, the 4 byte chunk length indicator, and the 4 byte IHDR marker
+            br.BaseStream.Seek(16, SeekOrigin.Begin);
+
+            var size = new Size((int)br.ReadUInt32BE(), (int)br.ReadUInt32BE());
+
+            if (br.BaseStream.CanSeek)
+                br.BaseStream.Seek(position, SeekOrigin.Begin);
+
+            return size;
+        }
+
         /// <summary>
         /// Reads the size of a BMP image from this stream at the current offset
         /// Rewinds the stream to where it started when finished
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
-        public static Size GetBmpImageSize(Stream stream) {
+        public static Size GetBmpImageSize(this Stream stream) {
 
             if (!ImageTypeHelper.IsBmp(stream))
                 throw new InvalidDataException("This is not a BMP stream");
@@ -84,7 +105,8 @@ namespace NContrib.Drawing {
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
-        public static Size GetGifImageSize(Stream stream) {
+        public static Size GetGifImageSize(this Stream stream) {
+
             if (!ImageTypeHelper.IsGif(stream))
                 throw new InvalidDataException("This is not a GIF stream");
 
@@ -105,13 +127,13 @@ namespace NContrib.Drawing {
 
         /// <summary>
         /// Reads a JPEG image's dimensions and returns a <see cref="Size"/> object. Much faster
-        /// than using the built in <see cref="System.Drawing.Image"/> class which loads the entire image into memory
+        /// than using the built in <see cref="Image"/> class which loads the entire image into memory
         /// Rewinds the stream after reading.
         /// </summary>
         /// <param name="stream"></param>
         /// <exception cref="InvalidDataException">Thrown when the Stream is not a JPEG image</exception>
         /// <returns></returns>
-        public static Size GetJpegImageSize(Stream stream) {
+        public static Size GetJpegImageSize(this Stream stream) {
 
             if (!ImageTypeHelper.IsJpeg(stream))
                 throw new InvalidDataException("This is not a JPEG stream");
@@ -155,31 +177,5 @@ namespace NContrib.Drawing {
                     stream.Seek(0, SeekOrigin.Begin);
             }
         }
-
-        /// <summary>
-        /// Reads the size of a PNG image from this stream at the current offset
-        /// Rewinds the stream to where it started when finished
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-        public static Size GetPngImageSize(Stream stream) {
-
-            if (!ImageTypeHelper.IsPng(stream))
-                throw new InvalidDataException("This is not a PNG stream");
-
-            var br = new BinaryReader(stream);
-            var position = br.BaseStream.Position;
-
-            // jump over the 8 byte signature, the 4 byte chunk length indicator, and the 4 byte IHDR marker
-            br.BaseStream.Seek(16, SeekOrigin.Begin);
-
-            var size = new Size((int)br.ReadUInt32BE(), (int)br.ReadUInt32BE());
-
-            if (br.BaseStream.CanSeek)
-                br.BaseStream.Seek(position, SeekOrigin.Begin);
-
-            return size;
-        }
-        #endregion
     }
 }
