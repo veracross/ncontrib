@@ -47,9 +47,12 @@ namespace NContrib.Extensions {
         /// <param name="equalityComparer"></param>
         /// <returns></returns>
         public static Dictionary<string, string> ToDictionary(this NameValueCollection collection, IEqualityComparer<string> equalityComparer) {
-            return Enumerable.Range(0, collection.Count)
-                .ToDictionary(collection.GetKey, collection.Get, equalityComparer);
+            return collection.ToDictionary(collection.GetKey, collection.Get, equalityComparer);
         }
 
+        public static Dictionary<TKey, TElement> ToDictionary<TKey, TElement>(this NameValueCollection collection, Func<int, TKey> keySelector, Func<int, TElement> elementSelector, IEqualityComparer<TKey> equalityComparer) {
+            return Enumerable.Range(0, collection.Count)
+                .ToDictionary(keySelector, elementSelector, equalityComparer);
+        }
     }
 }
