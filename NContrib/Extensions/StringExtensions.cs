@@ -216,6 +216,16 @@ namespace NContrib.Extensions {
             return string.IsNullOrEmpty(input) || input.Length <= length ? input : input.Substring(0, length);
         }
 
+        /// <summary>
+        /// Proxy to the <see cref="Regex.IsMatch(string, string)"/> method.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="pattern"></param>
+        /// <returns></returns>
+        public static bool IsMatch(this string input, string pattern) {
+            return Regex.IsMatch(input, pattern);
+        }
+
         /// <summary>Returns a string Dictionary by parsing a list of delimited key/value pairs</summary>
         /// <param name="input"></param>
         /// <param name="pairSeparator">Regex pattern that separates the pairs of key/values</param>
