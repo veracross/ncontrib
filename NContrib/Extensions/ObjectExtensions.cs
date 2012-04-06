@@ -81,7 +81,7 @@ namespace NContrib.Extensions {
                 return type.IsValueType ? Activator.CreateInstance(type) : null;
             
             // if the types are the same or value inherits from the type, we're done
-            if (value.GetType() == type || type.IsAssignableFrom(value.GetType()))
+            if (value.GetType() == type || type.IsInstanceOfType(value))
                 return value;
 
             // if we're going to a bool and the value is 1 or 0, assume true/false
