@@ -1,11 +1,14 @@
 *.ReSharper.user
 /builds
+/packages
 /NContrib/obj
 /NContrib/bin
+/NContrib/builds
 /NContrib.Tests/obj
 /NContrib.Tests/bin
 /NContrib4/bin
 /NContrib4/obj
+/NContrib4/builds
 /_ReSharper.NContrib
 *.suo
 /NContrib.International/obj
@@ -14,6 +17,12 @@
 /NContrib.Examples/obj
 /NContrib.Drawing/obj
 /NContrib.Drawing/bin
+/NContrib.Drawing/publish
 /NContrib.International/publish
+/NContrib.International/builds
+/NContrib.Web/obj
+/NContrib.Web/bin
+/NContrib.Web/publish
+/NContrib.Web/builds
 /NContrib/publish
 /NContrib4/publish

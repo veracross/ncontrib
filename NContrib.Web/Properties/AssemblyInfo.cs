@@ -1,7 +1,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
-[assembly: AssemblyTitle("NContrib Drawing")]
-[assembly: AssemblyDescription("NContrib Drawing")]
+[assembly: AssemblyTitle("NContrib Web")]
+[assembly: AssemblyDescription("NContrib Web")]
 [assembly: AssemblyCompany("Breuer & Co. LLC")]
 [assembly: AssemblyProduct("NContib")]
 [assembly: AssemblyCopyright("Breuer & Co. LLC 2012")]

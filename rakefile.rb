@@ -1,20 +1,27 @@
 require 'rubygems'
 require 'albacore'
+require 'version_bumper'
 
-BUILD_NUMBER = ((Time.now.getutc - Time.utc(1985, 10, 8)) / 86400).to_int
 SLN_FILE = "NContrib.sln"
 PRODUCT = "NContib"
-VERSION = "0.1.0.#{BUILD_NUMBER}"
 COMPANY = "Breuer & Co. LLC"
-COPYRIGHT = "Breuer & Co. LLC 2011"
-COMPILE_TARGET = 'release'
-BUILD_PROPERTIES = { :configuration => COMPILE_TARGET, :nowarn => "1573;1572;1591;1574" }
+COPYRIGHT = "Breuer & Co. LLC 2012"
 BUILDS_DIR = "builds"
+
+@env_buildconf = ENV['buildconf'] || 'release';
+
+def build_properties
+  { :configuration => @env_buildconf, :nowarn => "1573;1572;1591;1574" }
+end
+
+def build_version
+	bumper_version.to_s
+end
 
 task :default => [:build, :copy_dlls]
 
 assemblyinfo :assemblyinfo_core  do |asm|
-  asm.version = VERSION
+  asm.version = build_version
   asm.company_name = COMPANY
   asm.product_name = PRODUCT
   asm.copyright = COPYRIGHT
@@ -24,7 +31,7 @@ assemblyinfo :assemblyinfo_core  do |asm|
 end
 
 assemblyinfo :assemblyinfo_core4  do |asm|
-  asm.version = VERSION
+  asm.version = build_version
   asm.company_name = COMPANY
   asm.product_name = PRODUCT
   asm.copyright = COPYRIGHT
@@ -34,7 +41,7 @@ assemblyinfo :assemblyinfo_core4  do |asm|
 end
 
 assemblyinfo :assemblyinfo_international  do |asm|
-  asm.version = VERSION
+  asm.version = build_version
   asm.company_name = COMPANY
   asm.product_name = PRODUCT
   asm.copyright = COPYRIGHT
@@ -44,7 +51,7 @@ assemblyinfo :assemblyinfo_international  do |asm|
 end
 
 assemblyinfo :assemblyinfo_drawing  do |asm|
-  asm.version = VERSION
+  asm.version = build_version
   asm.company_name = COMPANY
   asm.product_name = PRODUCT
   asm.copyright = COPYRIGHT
@@ -53,25 +60,44 @@ assemblyinfo :assemblyinfo_drawing  do |asm|
   asm.output_file = "NContrib.Drawing/Properties/AssemblyInfo.cs"
 end
 
-task :assemblyinfo => [:assemblyinfo_core, :assemblyinfo_core4, :assemblyinfo_international, :assemblyinfo_drawing] do
+assemblyinfo :assemblyinfo_web  do |asm|
+  asm.version = build_version
+  asm.company_name = COMPANY
+  asm.product_name = PRODUCT
+  asm.copyright = COPYRIGHT
+  asm.title = "NContrib Web"
+  asm.description = "NContrib Web"
+  asm.output_file = "NContrib.Web/Properties/AssemblyInfo.cs"
+end
+
+task :autobump do
+	if @env_buildconf == 'release'
+		Rake::Task["bump:revision"].invoke
+	else
+		Rake::Task["bump:build"].info
+	end
+end
+
+task :assemblyinfo => [:assemblyinfo_core, :assemblyinfo_core4, :assemblyinfo_international, :assemblyinfo_drawing, :assemblyinfo_web] do
 	puts "Building lots of assembly files"
 end
 
-msbuild :build => :assemblyinfo do |msb|
+msbuild :build => [:autobump, :assemblyinfo] do |msb|
+  puts "Building solution with configuration: #{@env_buildconf}"
 	msb.solution = SLN_FILE
-	msb.properties = BUILD_PROPERTIES
+	msb.properties = build_properties
 	msb.targets :clean, :build
 	msb.verbosity = "minimal"
 end
 
 task :copy_dlls do
 	
-	collect_from = ["NContrib", "NContrib.International", "NContrib.Drawing", "NContrib4"]
+	collect_from = ["NContrib", "NContrib.International", "NContrib.Drawing", "NContrib.Web", "NContrib4"]
 	
 	Dir.mkdir(BUILDS_DIR) unless Dir.exists?(BUILDS_DIR)
 	
 	collect_from.each do |f|
-		dll_path = File.join(f, "bin", BUILD_PROPERTIES[:configuration], f + ".dll")
+		dll_path = File.join(f, "bin", build_properties[:configuration], f + ".dll")
 		FileUtils.cp(dll_path, BUILDS_DIR)
 		puts dll_path
 	end
