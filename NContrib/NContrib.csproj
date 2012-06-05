@@ -125,6 +125,7 @@
     <Compile Include="Culture\TextCaseTrasnformers.cs" />
     <Compile Include="Culture\TextGenerators.cs" />
     <Compile Include="Endian.cs" />
+    <Compile Include="Ensure.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\ArrayExtensions.cs" />
     <Compile Include="Extensions\BinaryReaderExtensions.cs" />
@@ -150,7 +151,6 @@
     <Compile Include="ObjectDescriber.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="RegexLibrary.cs" />
-    <Compile Include="RuhRohException.cs" />
     <Compile Include="ShorthandString.cs" />
     <Compile Include="SqlUri.cs" />
     <Compile Include="StringInjector.cs" />
