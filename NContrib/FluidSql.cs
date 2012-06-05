@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using NContrib.Extensions;
 
@@ -54,6 +56,10 @@ namespace NContrib {
             }
         }
 
+        public enum CrudOperation { Select, Insert, Update, Delete }
+
+        protected readonly Stopwatch ExecutionTimer;
+
         public SqlConnection Connection { get; protected set; }
 
         public SqlCommand Command { get; protected set; }
@@ -67,9 +73,11 @@ namespace NContrib {
 
         public int RecordsAffected { get; protected set; }
 
-        public TimeSpan TimeTaken { get; protected set; }
-
         public event EventHandler<CommandExecutedEventArgs> Executed;
+
+        protected CrudOperation TextCommandType { get; set; }
+        protected string TableName { get; set; }
+        protected string WhereClause { get; set; }
 
         protected readonly IDictionary<string, object> Parameters = new Dictionary<string, object>();
 
@@ -92,6 +100,7 @@ namespace NContrib {
 
         public FluidSql(SqlConnection connection) {
             Connection = connection;
+            ExecutionTimer = new Stopwatch();
         }
 
         public FluidSql Error(Action<FluidSql, SqlException> handler) {
@@ -121,7 +130,12 @@ namespace NContrib {
         }
 
         public FluidSql AddParameter(string name, object value) {
+
             Parameters.Add(name.ToSnakeCase(), value);
+
+            RegenerateInsertSql();
+            RegenerateUpdateSql();
+
             return this;
         }
 
@@ -135,6 +149,39 @@ namespace NContrib {
 
         public FluidSql AddParameters(IDictionary<string, object> parameters) {
             parameters.ToList().ForEach(p => AddParameter(p.Key, p.Value));
+            return this;
+        }
+
+        public FluidSql RemoveParameter(string name) {
+
+            Parameters.Remove(name);
+
+            RegenerateInsertSql();
+            RegenerateUpdateSql();
+
+            return this;
+        }
+
+        public FluidSql RemoveNullParameters() {
+
+            Parameters.Where(p => p.Value == null).Action(p => RemoveParameter(p.Key));
+            return this;
+        }
+
+        public FluidSql RemoveBlankParameters() {
+
+            Parameters
+                .Where(p => p.Value is string)
+                .Where(p => string.IsNullOrEmpty((string) p.Value))
+                .Action(p => RemoveParameter(p.Key));
+
+            return this;
+        }
+
+        public FluidSql RemoveNullAndBlankParameters() {
+
+            RemoveNullParameters();
+            RemoveBlankParameters();
             return this;
         }
 
@@ -173,12 +220,12 @@ namespace NContrib {
 
         public FluidSql CreateInsertCommand(string table, IDictionary<string, object> fields) {
 
-            var sql = "insert into " + table +
-                " (" + fields.Keys.Join(", ") + ")" +
-                " values(" + fields.Keys.Select(k => "@" + k).Join(", ") + ")";
-
-            CreateTextCommand(sql);
             AddParameters(fields);
+
+            TableName = table;
+            TextCommandType = CrudOperation.Insert;
+            
+            RegenerateInsertSql();
 
             return this;
         }
@@ -190,14 +237,18 @@ namespace NContrib {
 
         public FluidSql CreateUpdateCommand(string table, IDictionary<string, object> fields, string where) {
 
-            var sql = "update " + table + " set " + fields.Keys.Select(f => f + " = @" + f).Join(", ") + " where " + where;
-
-            CreateTextCommand(sql);
+            
             AddParameters(fields);
+
+            TableName = table;
+            WhereClause = where;
+            TextCommandType = CrudOperation.Update;
+
+            RegenerateUpdateSql();
 
             return this;
         }
-
+        
         #endregion
 
         protected static IDictionary<string, object> ObjectToFieldDictionary(object o) {
@@ -205,6 +256,28 @@ namespace NContrib {
             return o.GetType()
                 .GetProperties()
                 .ToDictionary(p => p.Name.ToSnakeCase(), p => p.GetValue(o, null));
+        }
+
+        protected void RegenerateInsertSql() {
+
+            if (TextCommandType != CrudOperation.Insert)
+                return;
+
+            var sql = "insert into " + TableName +
+                " (" + Parameters.Keys.Join(", ") + ")" +
+                " values(" + Parameters.Keys.Select(k => "@" + k).Join(", ") + ")";
+
+            CreateTextCommand(sql);
+        }
+
+        protected void RegenerateUpdateSql() {
+
+            if (TextCommandType != CrudOperation.Update)
+                return;
+
+            var sql = "update " + TableName + " set " + Parameters.Keys.Select(f => f + " = @" + f).Join(", ") + " where " + WhereClause;
+
+            CreateTextCommand(sql);
         }
 
         #region Public execution
@@ -298,6 +371,26 @@ namespace NContrib {
             Command.CommandText += "; select scope_identity()";
             return ExecuteScalar<T>();
         }
+        
+        public void ExecuteBinaryStream(string columnName, Stream output, int bufferSize = 1 << 18) {
+            
+            using (var dr = InternalExecuteReader(CommandBehavior.SequentialAccess)) {
+
+                dr.Read();
+
+                var colId = dr.GetOrdinal(columnName);
+
+                long bytesRead;
+                long position = 0;
+                var buffer = new byte[bufferSize];
+
+                while ( (bytesRead = dr.GetBytes(colId, position, buffer, 0, buffer.Length)) > 0 ) {
+
+                    position += bytesRead;
+                    output.Write(buffer, 0, (int)bytesRead);
+                }
+            }
+        }
 
         #endregion
 
@@ -361,8 +454,8 @@ namespace NContrib {
             return (RecordsAffected = InternalExecute(Command.ExecuteNonQuery, true));
         }
 
-        protected SqlDataReader InternalExecuteReader() {
-            return InternalExecute(Command.ExecuteReader);
+        protected SqlDataReader InternalExecuteReader(CommandBehavior commandBehavior = CommandBehavior.Default) {
+            return InternalExecute(() => Command.ExecuteReader(commandBehavior));
         }
 
         protected object InternalExecuteScalar() {
@@ -373,9 +466,9 @@ namespace NContrib {
             OnExecutingCommand();
 
             try {
-                var start = DateTime.Now;
+                ExecutionTimer.Start();
                 var result = executor();
-                TimeTaken = DateTime.Now - start;
+                ExecutionTimer.Stop();
 
                 return result;
             }
@@ -430,7 +523,7 @@ namespace NContrib {
             CommandExecutionCount++;
 
             if (Executed != null)
-                Executed(this, new CommandExecutedEventArgs(TimeTaken, Command.CommandText, Command.Parameters));
+                Executed(this, new CommandExecutedEventArgs(ExecutionTimer.Elapsed, Command.CommandText, Command.Parameters));
 
             if (dataReadComplete)
                 OnDataRead();
