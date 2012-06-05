@@ -21,6 +21,10 @@ namespace NContrib4 {
             return _fields.Keys.ToArray();
         }
 
+        public override IEnumerable<string> GetDynamicMemberNames() {
+            return GetFieldNames().Select(ToPropertyName);
+        }
+
         public override bool TryGetMember(GetMemberBinder binder, out object result) {
             return _fields.TryGetValue(binder.Name.ToSnakeCase().ToLower(), out result);
         }
