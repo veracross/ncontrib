@@ -6,6 +6,8 @@ namespace NContrib.Extensions {
 
     public static class IEnumerableExtensions {
 
+        private static readonly Random Randomizer = new Random();
+
         /// <summary>
         /// Converts the elements to a list and executes the given action for each element.
         /// Returns the original element list unchanged
@@ -24,6 +26,9 @@ namespace NContrib.Extensions {
         /// </summary>
         public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunksize) {
 
+            if (source == null)
+                throw new ArgumentNullException("source");
+
             if (chunksize <= 0)
                 throw new ArgumentException("Chunk size must be greater than zero.", "chunksize");
 
@@ -31,6 +36,21 @@ namespace NContrib.Extensions {
                 yield return source.Take(chunksize);
                 source = source.Skip(chunksize);
             }
+        }
+
+        public static T Random<T>(this IEnumerable<T> source) {
+            
+            if (source == null)
+                throw new ArgumentNullException("source");
+
+            var arr = source.ToArray();
+
+            if (arr.Length == 1)
+                return arr[0];
+
+            var index = Randomizer.Next(0, arr.Length);
+
+            return arr[index];
         }
 
         /// <summary>
