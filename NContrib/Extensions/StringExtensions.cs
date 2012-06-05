@@ -11,6 +11,26 @@ namespace NContrib.Extensions {
 
     public static class StringExtensions {
 
+        /// <summary>
+        /// Alias for Join
+        /// </summary>
+        /// <param name="strings"></param>
+        /// <param name="delimiter"></param>
+        /// <returns></returns>
+        public static string Concat(this IEnumerable<string> strings, string delimiter) {
+            return strings.Join(delimiter);
+        }
+
+        /// <summary>
+        /// Alias for Join with last delimiter
+        /// </summary>
+        /// <param name="strings"></param>
+        /// <param name="delimiter"></param>
+        /// <returns></returns>
+        public static string Concat(this IEnumerable<string> strings, string delimiter, string lastDelimiter) {
+            return strings.Join(delimiter, lastDelimiter);
+        }
+
         /// <summary>Indicates that this string contains only the given characters and nothing else</summary>
         /// <param name="input"></param>
         /// <param name="chars"></param>
@@ -77,6 +97,15 @@ namespace NContrib.Extensions {
             return input.ToCharArray().All(Char.IsDigit);
         }
 
+        /// <summary>
+        /// Indicates if this string is an email address
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static bool IsEmailAddress(this string input) {
+            return input.IsMatch(RegexLibrary.EmailAddress);
+        }
+
         /// <summary>Indicates if every character in this string is a letter using <see cref="Char.IsLetter(char)"/></summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -89,6 +118,25 @@ namespace NContrib.Extensions {
         /// <returns></returns>
         public static bool IsLettersOrDigits(this string input) {
             return input.ToCharArray().All(Char.IsLetterOrDigit);
+        }
+
+        /// <summary>
+        /// Indicates if this string is a mime type
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <example>text/string</example>
+        public static bool IsMimeType(this string input) {
+            return input.IsMatch(RegexLibrary.MimeType);
+        }
+
+        /// <summary>
+        /// Indicate if the string is a URL
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static bool IsUrl(this string input) {
+            return input.IsMatch(RegexLibrary.Url);
         }
 
         /// <summary>Concatenate these strings using the specified delimiter/glue/separator</summary>
@@ -263,6 +311,31 @@ namespace NContrib.Extensions {
             var doc = new XmlDocument();
             doc.LoadXml(s);
             return doc;
+        }
+
+        /// <summary>
+        /// When a match is successful, returns the captured named value.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="pattern"></param>
+        /// <param name="groupName"></param>
+        /// <returns></returns>
+        public static string RegexGroupValue(this string input, string pattern, string groupName)
+        {
+            var m = Regex.Match(input, pattern);
+
+            return !m.Success ? null : m.Groups[groupName].Value;
+        }
+
+        /// <summary>
+        /// Shortcut to <see cref="Regex.IsMatch(string, string)"/>
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="pattern"></param>
+        /// <returns></returns>
+        public static bool RegexIsMatch(this string input, string pattern)
+        {
+            return Regex.IsMatch(input, pattern);
         }
 
         /// <summary>
@@ -451,10 +524,26 @@ namespace NContrib.Extensions {
         /// <param name="input"></param>
         /// <returns></returns>
         public static string ToSnakeCase(this string input) {
+
+            // spaces to underscores
             input = input.Replace(' ', '_');
-            input = Regex.Replace(input, @"(?<=\p{Lu}{2,}|\p{Ll})(\p{Lu})(?=\p{Ll})", "_$1");
+
+            // two or more uppercase letters in a row, or a single lower case, followed by upper
+            // then lower get separated by an underscore
+            // ex) HSBCBank => HSBC_Bank
+            // ex) iPhone = i_Phone
+            // ex) 24HourATM => 24_Hour_ATM
+            // ex) Use24Hour => Use_24_Hour
+            input = Regex.Replace(input, @"(?<=\p{Lu}{2,}|\P{Lu})(\P{Ll})(?=\P{Lu})", "_$1");
+
+            // repeating uppercase letters get prefixed with an underscore
+            // when the follow a lowercase letter
+            // ex) mDNSResponder => m_DNS_Responder
             input = Regex.Replace(input, @"(?<=\p{Ll})(\p{Lu}{2,})", "_$1");
+
+            // repeating underscores replaced with a single underscore
             input = Regex.Replace(input, "_{2,}", "_");
+
             return input;
         }
 
