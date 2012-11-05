@@ -5,5 +5,6 @@
     public interface IApplicationTenantRepository<T> where T : IApplicationTenant {
 
         IList<T> Tenants();
+        void Refresh();
     }
 }
