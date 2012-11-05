@@ -196,6 +196,9 @@ namespace NContrib.Extensions {
 
             var arr = strings.ToArray();
 
+            if (arr.Length == 1)
+                return arr.First();
+
             return arr.Length > 0
                 ? string.Join(delimiter, arr, 0, arr.Length - 1) + lastDelimiter + arr.ElementAt(arr.Length - 1)
                 : null;
