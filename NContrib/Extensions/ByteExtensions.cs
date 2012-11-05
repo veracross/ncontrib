@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.IO.Compression;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace NContrib.Extensions {
 
@@ -54,6 +57,26 @@ namespace NContrib.Extensions {
         }
 
         /// <summary>
+        /// Decompress a string using GZip and the specific encoding. Defaults to UTF-8
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="encodingName"> </param>
+        /// <returns></returns>
+        public static string GZipDecompress(this byte[] data, string encodingName = "utf-8")
+        {
+            var enc = Encoding.GetEncoding(encodingName);
+            
+            using (var ms = new MemoryStream())
+            using (var gz = new GZipStream(ms, CompressionMode.Decompress))
+            {
+                ms.Write(data, 0, data.Length);
+                ms.Position = 0;
+                var buffer = gz.ReadAllBytes();
+                return enc.GetString(buffer);
+            }
+        }
+
+        /// <summary>
         /// Returns a byte array as a hexadecimal string. No byte separators (such as spaces or dashes)
         /// </summary>
         /// <param name="bytes"></param>
@@ -61,6 +84,5 @@ namespace NContrib.Extensions {
         public static string ToHex(this byte[] bytes) {
             return BitConverter.ToString(bytes).Replace("-", "");
         }
-
     }
 }

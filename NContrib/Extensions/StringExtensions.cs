@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -72,6 +74,26 @@ namespace NContrib.Extensions {
 
             var offset = m.Index + (includeSearchString ? 0 : m.Value.Length);
             return s.Substring(offset, s.Length - offset);
+        }
+
+        /// <summary>
+        /// Compress a string using GZip and the specific encoding. Defaults to UTF-8
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="encodingName"> </param>
+        /// <returns></returns>
+        public static byte[] GZipCompress(this string s, string encodingName = "utf-8")
+        {
+            var enc = Encoding.GetEncoding(encodingName);
+            var buffer = enc.GetBytes(s);
+            
+            using (var ms = new MemoryStream())
+            using (var gz = new GZipStream(ms, CompressionMode.Compress))
+            {
+                gz.Write(buffer, 0, buffer.Length);
+                gz.Close();
+                return ms.ToArray();
+            }
         }
 
         /// <summary>Returns part of a string starting at the index where the search char was found</summary>
