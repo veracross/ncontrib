@@ -367,40 +367,9 @@ namespace NContrib {
             return temp;
         }
 
-        protected T AutoMapType<T>(IDataReader dr)
-        {
-            var destType = typeof (T);
-            var props = destType.GetProperties().ToArray();
-
-            var destObj = Activator.CreateInstance(destType);
-
-            for (var i = 0; i < dr.FieldCount; i++)
-            {
-                var propName = dr.GetName(i).ToCamelCase(TextTransform.Upper);
-                var destProp = props.FirstOrDefault(p => p.Name == propName);
-
-                if (destProp != null)
-                {
-                    var value = dr.GetValue(i, convertDbNull: true).ConvertTo(destProp.PropertyType);
-
-                    try
-                    {
-                        destProp.SetValue(destObj, value, null);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("Could not set property '" + destProp.Name + "': " + ex.Message, ex);
-                    }
-                }
-                    
-            }
-
-            return (T)destObj;
-        }
-
         public List<T> ExecuteAndAutoMap<T>()
         {
-            return ExecuteAndTransform(AutoMapType<T>);
+            return ExecuteAndTransform(dr => dr.AutoMapType<T>());
         } 
 
         public T ExecuteScopeIdentity<T>() {
@@ -510,7 +479,7 @@ namespace NContrib {
             }
             catch (SqlException ex) {
                 if (ErrorHandlers.Count == 0)
-                    throw ex;
+                    throw;
 
                 foreach (var h in ErrorHandlers)
                     h.Handler(this, ex);
@@ -532,7 +501,7 @@ namespace NContrib {
             }
             catch (SqlException ex) {
                 if (ErrorHandlers.Count == 0)
-                    throw ex;
+                    throw;
 
                 foreach (var h in ErrorHandlers)
                     h.Handler(this, ex);
