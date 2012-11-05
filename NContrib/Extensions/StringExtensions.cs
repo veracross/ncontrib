@@ -597,6 +597,25 @@ namespace NContrib.Extensions {
         }
 
         /// <summary>
+        /// If the input string is too long, chops it off and appends the <see cref="trailing"/> string.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="lengthLimit">The total maximum string length to return.</param>
+        /// <param name="trailing">String to append when truncation is needed</param>
+        /// <example>
+        /// If you send in 20 characters, have a <see cref="lengthLimit"/> of 10,
+        /// <see cref="trailing"/> string of "...", then you'll get 7 characters of the original
+        /// string and then the "..." appended to the end.
+        /// </example>
+        /// <returns></returns>
+        public static string Truncate(this string input, int lengthLimit, string trailing = "...")
+        {
+            return input.Length + trailing.Length <= lengthLimit
+                       ? input
+                       : input.Left(lengthLimit - trailing.Length) + trailing;
+        }
+
+        /// <summary>
         /// Attempts to convert the string to something (T) using the ConvertTo&lt;T&gt; method
         /// If exceptions are encountered, false is returned and the assigner is not called
         /// If no exceptions are found, assigner is called and true is returned
