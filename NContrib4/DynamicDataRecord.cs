@@ -11,9 +11,9 @@ namespace NContrib4 {
 
         private readonly Dictionary<string, object> _fields;
 
-        public DynamicDataRecord(IDataRecord dr) {
+        public DynamicDataRecord(IDataRecord dr, bool convertDbNull) {
             _fields = Enumerable.Range(0, dr.FieldCount)
-                .Select(i => GetRecord(i, dr))
+                .Select(i => GetRecord(i, dr, convertDbNull))
                 .ToDictionary(r => r.Key, r => r.Value);
         }
 
@@ -53,9 +53,9 @@ namespace NContrib4 {
             return CultureInfo.InvariantCulture.TextInfo.ToTitleCase(name).Replace("_", "");
         }
 
-        protected static KeyValuePair<string, object> GetRecord(int i, IDataRecord dr) {
+        protected static KeyValuePair<string, object> GetRecord(int i, IDataRecord dr, bool convertDbNull) {
 
-            var value = dr.GetValue(i);
+            var value = dr.GetValue(i, convertDbNull);
             var name = dr.GetName(i);
 
             const string autoXmlSuffix = "_xml";
