@@ -457,6 +457,9 @@ namespace NContrib.Extensions {
             // replace whitespace, dashes, an underscores with nothing and uppercase the letter after it
             s = Regex.Replace(s, @"[\s\-_]+(\w)(\p{Lu}+)?", m => m.Groups[1].Value.ToUpper());
 
+            // uppercase the letter after a colon. useful in namespaces
+            s = Regex.Replace(s, @"(?<=[:])(\p{Ll})?", m => m.Groups[1].Value.ToUpper());
+
             if (firstCharTransform == TextTransform.Upper)
                 return Char.ToUpper(s[0]) + s.Substring(1);
 
