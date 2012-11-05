@@ -38,6 +38,17 @@ namespace NContrib.Extensions {
             }
         }
 
+        /// <summary>
+        /// Finds all elements in a list of the given type and casts them to that.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> FindAndCast<T>(this IEnumerable<object> source)
+        {
+            return source.Where(item => item is T).Cast<T>();
+        }
+
         public static T Random<T>(this IEnumerable<T> source) {
             
             if (source == null)
