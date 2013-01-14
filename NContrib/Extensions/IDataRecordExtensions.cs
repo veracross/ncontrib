@@ -24,29 +24,28 @@ namespace NContrib.Extensions
                 var propName = dr.GetName(i).ToCamelCase(TextTransform.Upper);
                 var destProp = props.FirstOrDefault(p => p.Name == propName);
 
-                if (destProp != null)
+                if (destProp == null)
+                    continue;
+
+                var value = dr.GetValue(i, convertDbNull: true);
+
+                try
                 {
-                    object value;
-
-                    try
-                    {
-                        value = dr.GetValue(i, convertDbNull: true).ConvertTo(destProp.PropertyType);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("Failed to convert field '" + dr.GetName(i) + "' to '" + destProp.PropertyType.Name + "': " + ex.Message, ex);
-                    }
-
-                    try
-                    {
-                        destProp.SetValue(destObj, value, null);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("Could not set property '" + destProp.Name + "': " + ex.Message, ex);
-                    }
+                    value = value.ConvertTo(destProp.PropertyType);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Failed to convert field '" + dr.GetName(i) + "' to '" + destProp.PropertyType.Name + "': " + ex.Message, ex);
                 }
 
+                try
+                {
+                    destProp.SetValue(destObj, value, null);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Could not set property '" + destProp.Name + "': " + ex.Message, ex);
+                }
             }
 
             return destObj;
