@@ -202,6 +202,24 @@ namespace NContrib {
             return ReturnValueParameter.Value.ConvertTo<T>();
         }
 
+        public string DescribeCommand()
+        {
+            if (Command.CommandType == CommandType.Text || Command.CommandType == CommandType.TableDirect)
+                return Command.CommandText;
+
+            var paramDescription = Command.Parameters.Cast<SqlParameter>()
+                                          .Where(p => p.Direction != ParameterDirection.ReturnValue)
+                                          .Select(p => "@" + p.ParameterName + " = " + p.Value)
+                                          .Join(", ");
+
+            var description = "exec " + Command.CommandText;
+
+            if (paramDescription.IsNotBlank())
+                description += " " + paramDescription;
+
+            return description;
+        }
+
         #region Public setup
         public FluidSql CreateProcedureCommand(string procedureName, object parameters = null) {
             CreateCommand(procedureName, CommandType.StoredProcedure, parameters);
