@@ -154,6 +154,7 @@
     <Compile Include="Range.cs" />
     <Compile Include="RegexLibrary.cs" />
     <Compile Include="ShorthandString.cs" />
+    <Compile Include="SqlCommandFormatter.cs" />
     <Compile Include="SqlUri.cs" />
     <Compile Include="StringInjector.cs" />
     <Compile Include="IniConfigurationManager.cs" />

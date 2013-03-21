@@ -22,14 +22,12 @@ namespace NContrib {
 
         public TimeSpan TimeTaken { get; protected set; }
 
-        public string Command { get; protected set; }
+        public SqlCommand Command { get; protected set; }
 
-        public SqlParameterCollection Parameters { get; protected set; }
-
-        public CommandExecutedEventArgs(TimeSpan timeTaken, string command, SqlParameterCollection parameters) {
+        public CommandExecutedEventArgs(TimeSpan timeTaken, SqlCommand command)
+        {
             TimeTaken = timeTaken;
             Command = command;
-            Parameters = parameters;
         }
     }
 
@@ -546,7 +544,7 @@ namespace NContrib {
             CommandExecutionCount++;
 
             if (Executed != null)
-                Executed(this, new CommandExecutedEventArgs(ExecutionTimer.Elapsed, Command.CommandText, Command.Parameters));
+                Executed(this, new CommandExecutedEventArgs(ExecutionTimer.Elapsed, Command));
 
             if (dataReadComplete)
                 OnDataRead();
