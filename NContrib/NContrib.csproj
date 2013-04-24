@@ -113,6 +113,7 @@
     <Compile Include="Extensions\SocketExtensions.cs" />
     <Compile Include="Extensions\SqlCommandExtensions.cs" />
     <Compile Include="Extensions\SqlConnectionExtensions.cs" />
+    <Compile Include="Extensions\SqlExceptionExtensions.cs" />
     <Compile Include="Extensions\StreamExtensions.cs" />
     <Compile Include="Extensions\StringCryptographyExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -137,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="NContrib.snk" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

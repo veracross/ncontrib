@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NContrib", "NContrib\NContrib.csproj", "{0814E816-B49E-416B-83D6-232E1DD8DD37}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NContrib.Tests", "NContrib.Tests\NContrib.Tests.csproj", "{41063360-C3FC-4EFE-819B-7FAF2516FCA8}"
