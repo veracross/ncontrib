@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Web.UI;
 using System.Xml;
 using System.Xml.Xsl;
 
@@ -205,12 +204,12 @@ namespace NContrib.Extensions {
         public static string TransformWithXsl(this XmlNode node, string xsl, Formatting formatting = Formatting.Indented) {
 
             using (var sw = new StringWriter())
-            using (var xw = new HtmlTextWriter(sw))
+            using (var xw = new XmlTextWriter(sw) {Formatting = formatting})
             using (var sr = new StringReader(xsl))
             using (var xtr = new XmlTextReader(sr)) {
                 var transformer = new XslCompiledTransform();
                 transformer.Load(xtr);
-                transformer.Transform(node, null, xw);
+                transformer.Transform(node, xw);
 
                 return sw.ToString();
             }
