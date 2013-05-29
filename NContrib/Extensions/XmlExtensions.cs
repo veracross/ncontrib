@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.Xsl;
 
@@ -213,6 +214,30 @@ namespace NContrib.Extensions {
 
                 return sw.ToString();
             }
+        }
+
+        /// <summary>
+        /// Transforms XML with XSL and writes the result verbatim, i.e. does not re-format
+        /// to create super-valid super-efficient XML. This should be used when generating HTML
+        /// so you don't end up with things like &lt;div/&gt;
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="xsl"></param>
+        /// <returns></returns>
+        public static string TransformWithXslVerbatim(this XmlNode node, string xsl)
+        {
+            var sb = new StringBuilder();
+
+            using (var sw = new StringWriter(sb))
+            using (var sr = new StringReader(xsl))
+            using (var xtr = new XmlTextReader(sr))
+            {
+                var transformer = new XslCompiledTransform();
+                transformer.Load(xtr);
+                transformer.Transform(node, null, sw);
+            }
+
+            return sb.ToString();
         }
 
         /// <summary>
