@@ -299,6 +299,16 @@ namespace NContrib.Extensions {
             return Regex.IsMatch(input, pattern);
         }
 
+        public static string NullIf(this string input, Predicate<string> condition)
+        {
+            return condition(input) ? null : input;
+        }
+
+        public static string NullIfBlank(this string input)
+        {
+            return input.NullIf(s => s.IsBlank());
+        }
+
         /// <summary>Returns a string Dictionary by parsing a list of delimited key/value pairs</summary>
         /// <param name="input"></param>
         /// <param name="pairSeparator">Regex pattern that separates the pairs of key/values</param>
