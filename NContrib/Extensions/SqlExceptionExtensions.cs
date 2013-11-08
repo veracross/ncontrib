@@ -35,6 +35,20 @@ namespace NContrib.Extensions
         }
 
         /// <summary>
+        /// Errors that should be displayed to the user
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
+        public static string[] UserErrorMessages(this SqlException ex)
+        {
+            return ex.Errors.Cast<SqlError>()
+                     .Where(e => e.Class == 11)
+                     .OrderBy(e => e.LineNumber)
+                     .Select(e => e.Message)
+                     .ToArray();
+        }
+
+        /// <summary>
         /// I
         /// </summary>
         /// <param name="ex"></param>
