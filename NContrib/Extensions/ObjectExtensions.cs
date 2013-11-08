@@ -112,6 +112,24 @@ namespace NContrib.Extensions {
             if (type.IsEnum)
                 return Enum.Parse(type, value.ToString());
 
+            // if the destination type is an array and the source type is a string
+            // then we probably have a delimited string. attempt to split the string
+            // by commas, semi-colons, and pipes, and converting each element to the
+            // destination array's element type
+            // ex) "1,2,3,4".ConvertTo(typeof(int[], null) => [1, 2, 3, 4]
+            if (type.IsArray && value is string)
+            {
+                var stringValues = (value as string).Split(new[] {',', ';', '|'});
+                var elementType = type.GetElementType();
+                var arr = Array.CreateInstance(elementType, stringValues.Length);
+
+                Enumerable.Range(0, stringValues.Length)
+                          .ToList()
+                          .ForEach(i => arr.SetValue(stringValues[i].ConvertTo(elementType, cultureInfo), i));
+
+                return arr;
+            }
+
             throw new InvalidCastException(string.Format("It is not possible to convert from '{0}' to '{1}'",
                                                          value.GetType(), type));
         }
