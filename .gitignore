@@ -28,3 +28,4 @@
 /NContrib4/publish
 NContrib.Web.MultiTenancy/bin
 NContrib.Web.MultiTenancy/obj
+.DS_Store
