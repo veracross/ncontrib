@@ -43,7 +43,7 @@
         /// <summary>
         /// A forgiving email address regex. Let email software handle real validation.
         /// </summary>
-        public const string EmailAddress = @"\b[\w._%+-]+@[\w.-]+\.[a-z]{2,4}\b";
+        public const string EmailAddress = @"\b[\w._%+-]+@[\w.-]+\.[a-z]+\b";
 
         public const string Url = @"((https?|ftp|gopher|telnet|file|notes|ms-help):((//)|(\\\\))+[\w\d:#@%/;$()~_?\+-=\\\.&]*)";
 
