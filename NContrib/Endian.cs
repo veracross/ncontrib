@@ -3,7 +3,7 @@
 namespace NContrib {
 
     /// <summary>Byte-swaps unsigned numerics for endian changing</summary>
-    [CLSCompliant(false)]
+   /// [CLSCompliant(false)]
     public static class Endian {
 
         /// <summary>Byte-swaps a <see cref="UInt16"/></summary>
