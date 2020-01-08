@@ -9,6 +9,7 @@
 /NContrib4/bin
 /NContrib4/obj
 /NContrib4/builds
+.vs
 /_ReSharper.NContrib
 *.suo
 /NContrib.International/obj

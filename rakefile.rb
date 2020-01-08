@@ -11,7 +11,7 @@ BUILDS_DIR = "builds"
 @env_buildconf = ENV['buildconf'] || 'release';
 
 def build_properties
-  { :configuration => @env_buildconf, :nowarn => "1573;1572;1591;1574" }
+  { :configuration => @env_buildconf }
 end
 
 def build_version
@@ -84,6 +84,7 @@ end
 
 msbuild :build => [:autobump, :assemblyinfo] do |msb|
   puts "Building solution with configuration: #{@env_buildconf}"
+  msb.command = 'msbuild'
 	msb.solution = SLN_FILE
 	msb.properties = build_properties
 	msb.targets :clean, :build
@@ -91,11 +92,11 @@ msbuild :build => [:autobump, :assemblyinfo] do |msb|
 end
 
 task :copy_dlls do
-	
+
 	collect_from = ["NContrib", "NContrib.International", "NContrib.Drawing", "NContrib.Web", "NContrib4"]
-	
+
 	Dir.mkdir(BUILDS_DIR) unless Dir.exists?(BUILDS_DIR)
-	
+
 	collect_from.each do |f|
 		dll_path = File.join(f, "bin", build_properties[:configuration], f + ".dll")
 		FileUtils.cp(dll_path, BUILDS_DIR)
